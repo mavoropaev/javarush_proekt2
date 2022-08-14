@@ -1,19 +1,32 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
+import ua.com.javarush.mavoropaev.javarush_proekt2.Map;
+import ua.com.javarush.mavoropaev.javarush_proekt2.NameAnimals;
+
 public abstract class Animal {
-    private String name;
+    private NameAnimals name;
     private double weight;
     private int maxPopulation;
     private double speed;
     private double weightEat;
+
+
+    public int xMap;
+    public int yMap;
 
     public abstract void eat();
     public abstract void move();
     public abstract void reproduction();
     public abstract void dead();
 
-    public void setName(String name) {
+    public void setName(NameAnimals name) {
         this.name = name;
+    }
+
+    public Animal(NameAnimals name, int xMap, int yMap) {
+        this.name = name;
+        this.xMap = xMap;
+        this.yMap = yMap;
     }
 
     public void setWeight(double weight) {
@@ -35,7 +48,7 @@ public abstract class Animal {
     protected Animal() {
     }
 
-    public String getName() {
+    public NameAnimals getName() {
         return name;
     }
 
