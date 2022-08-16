@@ -10,7 +10,7 @@ public class Buffalo extends Herbivore {
     public static final double MAX_EAT = 100;
 
     public Buffalo(NameAnimals buffalo, int x, int y) {
-        super();
+        super(buffalo, x, y);
     }
 
 }

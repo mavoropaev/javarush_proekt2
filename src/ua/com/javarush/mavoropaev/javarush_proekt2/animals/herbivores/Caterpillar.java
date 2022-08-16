@@ -10,7 +10,7 @@ public class Caterpillar extends Herbivore {
     public static  final double MAX_EAT = 0;
 
     public Caterpillar(NameAnimals caterpillar, int x, int y) {
-        super();
+        super(caterpillar, x, y);
     }
 
 }

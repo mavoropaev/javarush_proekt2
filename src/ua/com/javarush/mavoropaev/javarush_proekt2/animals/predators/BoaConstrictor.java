@@ -10,7 +10,7 @@ public class BoaConstrictor extends Predator {
     public static final double MAX_EAT = 3;
 
     public BoaConstrictor(NameAnimals boaConstrictor, int x, int y) {
-        super();
+        super(boaConstrictor, x, y);
     }
 
 }

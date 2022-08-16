@@ -10,7 +10,7 @@ public class Fox extends Predator {
     public static final double MAX_EAT = 2;
 
     public Fox(NameAnimals fox, int x, int y) {
-        super();
+        super(fox, x, y);
     }
 
 }

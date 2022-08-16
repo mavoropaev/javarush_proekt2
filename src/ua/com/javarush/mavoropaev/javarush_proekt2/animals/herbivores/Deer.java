@@ -10,7 +10,7 @@ public class Deer extends Herbivore {
     public static final double MAX_EAT = 50;
 
     public Deer(NameAnimals deer, int x, int y) {
-        super();
+        super(deer, x, y);
     }
 
 }

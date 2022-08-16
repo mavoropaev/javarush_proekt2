@@ -10,7 +10,7 @@ public class WildBoar extends Herbivore {
     public static final double MAX_EAT = 50;
 
     public WildBoar(NameAnimals wildBoar, int x, int y) {
-        super();
+        super(wildBoar,x,y);
     }
 
 }

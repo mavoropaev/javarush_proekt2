@@ -10,7 +10,7 @@ public class Mouse extends Herbivore {
     public static final double MAX_EAT = 0.01;
 
     public Mouse(NameAnimals mouse, int x, int y) {
-        super();
+        super(mouse, x, y);
     }
 
 }

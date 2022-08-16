@@ -10,7 +10,7 @@ public class Bear extends Predator {
     public static final double MAX_EAT = 80;
 
     public Bear(NameAnimals bear, int x, int y) {
-        super();
+        super(bear, x, y);
     }
 
 }
