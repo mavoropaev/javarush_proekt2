@@ -1,12 +1,10 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
-import ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores.*;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 
 public class Map {
@@ -88,118 +86,131 @@ public class Map {
                             Iterator<Animal> animalsIterator = animalsList.iterator();
                             while (animalsIterator.hasNext()){
                                 Animal animal = animalsIterator.next();
-
                                 //step - 1 : move - animal.move()
-                                if (animal.getCountCycleMove() < getCountCycle()) {
-                                    if (animal.getSpeed() > 0) {
-                                        int countStep = 0;
-                                        while (countStep == 0){
-                                            countStep = random.nextInt(animal.getSpeed());
-                                        }
-                                        int direction = 0;
-                                        while (direction == 0) {
-                                            direction = random.nextInt(COUNT_DIRECTION + 1);
-                                        }
-
-                                        if (direction == UP_DIR) {
-                                            int newYMap = animal.yMap + countStep;
-                                            if (newYMap >= sizeY) {
-                                                newYMap = sizeY - 1;
-                                            }
-                                            if (newYMap == y){
-                                                animal.setCountCycleMove(getCountCycle());
-                                                continue;
-                                            }
-                                            int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getAnimalsOnType(name);
-                                            if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
-                                                animal.setCountCycleMove(getCountCycle());
-                                                continue;
-                                            }
-                                            animal.yMap = newYMap;
-                                            cellMap[x][newYMap].addAnimalsOnType(name);
-                                            cellMap[x][y].removeAnimalsOnType(name);
-                                        }
-
-                                        if (direction == RIGHT_DIR) {
-                                            int newXMap = animal.xMap + countStep;
-                                            if (newXMap >= sizeX) {
-                                                newXMap = sizeX - 1;
-                                            }
-                                            if (newXMap == x){
-                                                animal.setCountCycleMove(getCountCycle());
-                                                continue;
-                                            }
-                                            int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getAnimalsOnType(name);
-                                            if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
-                                                animal.setCountCycleMove(getCountCycle());
-                                                continue;
-                                            }
-                                            animal.xMap = newXMap;
-                                            cellMap[newXMap][y].addAnimalsOnType(name);
-                                            cellMap[x][y].removeAnimalsOnType(name);
-                                        }
-
-                                        if (direction == DOWN_DIR) {
-                                            int newYMap = animal.yMap - countStep;
-                                            if (newYMap < 0) {
-                                                newYMap = 0;
-                                            }
-                                            if (newYMap == y){
-                                                animal.setCountCycleMove(getCountCycle());
-                                                continue;
-                                            }
-                                            int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getAnimalsOnType(name);
-                                            if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
-                                                animal.setCountCycleMove(getCountCycle());
-                                                continue;
-                                            }
-                                            animal.yMap = newYMap;
-                                            cellMap[x][newYMap].addAnimalsOnType(name);
-                                            cellMap[x][y].removeAnimalsOnType(name);
-                                        }
-
-                                        if (direction == LEFT_DIR){
-                                            int newXMap = animal.xMap - countStep;
-                                            if (newXMap < 0) {
-                                                newXMap = 0;
-                                            }
-                                            if (newXMap == x){
-                                                animal.setCountCycleMove(getCountCycle());
-                                                continue;
-                                            }
-                                            int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getAnimalsOnType(name);
-                                            if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
-                                                animal.setCountCycleMove(getCountCycle());
-                                                continue;
-                                            }
-                                            animal.xMap = newXMap;
-                                            cellMap[newXMap][y].addAnimalsOnType(name);
-                                            cellMap[x][y].removeAnimalsOnType(name);
-                                        }
-
-                                        animal.setCountCycleMove(getCountCycle());
-                                        animalsIterator.remove();
-
-                                        int newX = animal.xMap;
-                                        int newY = animal.yMap;
-                                        ArrayList<Animal> newCellListAnimals;
-                                        if (cellMap[newX][newY].listAnimals.containsKey(name)) {
-                                            newCellListAnimals = cellMap[newX][newY].listAnimals.get(name);
-                                        }
-                                        else{
-                                            newCellListAnimals = new ArrayList<>();
-                                        }
-                                        newCellListAnimals.add(animal);
-                                        cellMap[newX][newY].listAnimals.put(name, newCellListAnimals);
-                                        printState();
-                                    }
+                                if (animal.move(this, animal.getSpeed(), animal.getMaxPopulation())){
+                                    printState();
+                                    animalsIterator.remove();
                                 }
+
+                                // if (animalsMove(x, y, name, animal)){
+                                //    animalsIterator.remove();
+                                //}
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    private boolean animalsMove(int x, int y, NameAnimals name, Animal animal) {
+        Random random = new Random();
+        if (animal.getCountCycleMove() < getCountCycle()) {
+            if (animal.getSpeed() > 0) {
+                int countStep = 0;
+                while (countStep == 0){
+                    countStep = random.nextInt(animal.getSpeed());
+                }
+                int direction = 0;
+                while (direction == 0) {
+                    direction = random.nextInt(COUNT_DIRECTION + 1);
+                }
+
+                if (direction == UP_DIR) {
+                    int newYMap = animal.yMap + countStep;
+                    if (newYMap >= sizeY) {
+                        newYMap = sizeY - 1;
+                    }
+                    if (newYMap == y){
+                        animal.setCountCycleMove(getCountCycle());
+                        return false;
+                    }
+                    int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getAnimalsOnType(name);
+                    if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
+                        animal.setCountCycleMove(getCountCycle());
+                        return false;
+                    }
+                    animal.yMap = newYMap;
+                    cellMap[x][newYMap].addAnimalsOnType(name);
+                    cellMap[x][y].removeAnimalsOnType(name);
+                }
+
+                if (direction == RIGHT_DIR) {
+                    int newXMap = animal.xMap + countStep;
+                    if (newXMap >= sizeX) {
+                        newXMap = sizeX - 1;
+                    }
+                    if (newXMap == x){
+                        animal.setCountCycleMove(getCountCycle());
+                        return false;
+                    }
+                    int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getAnimalsOnType(name);
+                    if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
+                        animal.setCountCycleMove(getCountCycle());
+                        return false;
+                    }
+                    animal.xMap = newXMap;
+                    cellMap[newXMap][y].addAnimalsOnType(name);
+                    cellMap[x][y].removeAnimalsOnType(name);
+                }
+
+                if (direction == DOWN_DIR) {
+                    int newYMap = animal.yMap - countStep;
+                    if (newYMap < 0) {
+                        newYMap = 0;
+                    }
+                    if (newYMap == y){
+                        animal.setCountCycleMove(getCountCycle());
+                        return false;
+                    }
+                    int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getAnimalsOnType(name);
+                    if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
+                        animal.setCountCycleMove(getCountCycle());
+                        return false;
+                    }
+                    animal.yMap = newYMap;
+                    cellMap[x][newYMap].addAnimalsOnType(name);
+                    cellMap[x][y].removeAnimalsOnType(name);
+                }
+
+                if (direction == LEFT_DIR){
+                    int newXMap = animal.xMap - countStep;
+                    if (newXMap < 0) {
+                        newXMap = 0;
+                    }
+                    if (newXMap == x){
+                        animal.setCountCycleMove(getCountCycle());
+                        return false;
+                    }
+                    int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getAnimalsOnType(name);
+                    if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
+                        animal.setCountCycleMove(getCountCycle());
+                        return false;
+                    }
+                    animal.xMap = newXMap;
+                    cellMap[newXMap][y].addAnimalsOnType(name);
+                    cellMap[x][y].removeAnimalsOnType(name);
+                }
+
+                animal.setCountCycleMove(getCountCycle());
+                //animalsIterator.remove();
+
+                int newX = animal.xMap;
+                int newY = animal.yMap;
+                ArrayList<Animal> newCellListAnimals;
+                if (cellMap[newX][newY].listAnimals.containsKey(name)) {
+                    newCellListAnimals = cellMap[newX][newY].listAnimals.get(name);
+                }
+                else{
+                    newCellListAnimals = new ArrayList<>();
+                }
+                newCellListAnimals.add(animal);
+                cellMap[newX][newY].listAnimals.put(name, newCellListAnimals);
+                printState();
+                return true;
+            }
+        }
+        return false;
     }
 
 
