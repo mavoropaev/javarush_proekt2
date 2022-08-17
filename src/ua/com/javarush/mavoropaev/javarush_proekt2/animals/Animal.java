@@ -1,6 +1,6 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.Map;
+import ua.com.javarush.mavoropaev.javarush_proekt2.GeneralMap;
 import ua.com.javarush.mavoropaev.javarush_proekt2.NameAnimals;
 
 import java.util.ArrayList;
@@ -103,12 +103,16 @@ public abstract class Animal {
         return weightEat;
     }
 
-    public boolean move(Map mapGod, int countStep, int maxPopulation) {
+    public boolean move(GeneralMap generalMapGod, int maxCountStep, int maxPopulation) {
         //step - 1 : move - animal.move()
         Random random = new Random();
 
-        if (getCountCycleMove() < mapGod.getCountCycle()) {
-            if (countStep > 0) {
+        if (getCountCycleMove() < generalMapGod.getCountCycle()) {
+            if (maxCountStep > 0) {
+                int countStep = 0;
+                while (countStep == 0){
+                    countStep = random.nextInt(maxCountStep + 1);
+                }
                 int direction = 0;
                 while (direction == 0) {
                     direction = random.nextInt(COUNT_DIRECTION + 1);
@@ -116,43 +120,43 @@ public abstract class Animal {
 
                 if (direction == UP_DIR) {
                     int newYMap = yMap + countStep;
-                    if (newYMap >= mapGod.getSizeY()) {
-                        newYMap = mapGod.getSizeY() - 1;
+                    if (newYMap >= generalMapGod.getSizeY()) {
+                        newYMap = generalMapGod.getSizeY() - 1;
                     }
                     if (newYMap == yMap) {
-                        setCountCycleMove(mapGod.getCountCycle());
+                        setCountCycleMove(generalMapGod.getCountCycle());
                         return false;
                     }
 
-                    int countAnimalsOnTypeNewCell = mapGod.cellMap[xMap][newYMap].getAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = generalMapGod.cellMap[xMap][newYMap].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
-                        setCountCycleMove(mapGod.getCountCycle());
+                        setCountCycleMove(generalMapGod.getCountCycle());
                         return false;
                     }
 
-                    mapGod.cellMap[xMap][newYMap].addAnimalsOnType(name);
-                    mapGod.cellMap[xMap][yMap].removeAnimalsOnType(name);
+                    generalMapGod.cellMap[xMap][newYMap].addAnimalsOnType(name);
+                    generalMapGod.cellMap[xMap][yMap].removeAnimalsOnType(name);
                     yMap = newYMap;
                 }
 
                 if (direction == RIGHT_DIR) {
                     int newXMap = xMap + countStep;
-                    if (newXMap >= mapGod.getSizeX()) {
-                        newXMap = mapGod.getSizeX() - 1;
+                    if (newXMap >= generalMapGod.getSizeX()) {
+                        newXMap = generalMapGod.getSizeX() - 1;
                     }
                     if (newXMap == xMap) {
-                        setCountCycleMove(mapGod.getCountCycle());
+                        setCountCycleMove(generalMapGod.getCountCycle());
                         return false;
                     }
 
-                    int countAnimalsOnTypeNewCell = mapGod.cellMap[newXMap][yMap].getAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = generalMapGod.cellMap[newXMap][yMap].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
-                        setCountCycleMove(mapGod.getCountCycle());
+                        setCountCycleMove(generalMapGod.getCountCycle());
                         return false;
                     }
 
-                    mapGod.cellMap[newXMap][yMap].addAnimalsOnType(name);
-                    mapGod.cellMap[xMap][yMap].removeAnimalsOnType(name);
+                    generalMapGod.cellMap[newXMap][yMap].addAnimalsOnType(name);
+                    generalMapGod.cellMap[xMap][yMap].removeAnimalsOnType(name);
                     xMap = newXMap;
                 }
 
@@ -162,18 +166,18 @@ public abstract class Animal {
                         newYMap = 0;
                     }
                     if (newYMap == yMap) {
-                        setCountCycleMove(mapGod.getCountCycle());
+                        setCountCycleMove(generalMapGod.getCountCycle());
                         return false;
                     }
 
-                    int countAnimalsOnTypeNewCell = mapGod.cellMap[xMap][newYMap].getAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = generalMapGod.cellMap[xMap][newYMap].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
-                        setCountCycleMove(mapGod.getCountCycle());
+                        setCountCycleMove(generalMapGod.getCountCycle());
                         return false;
                     }
 
-                    mapGod.cellMap[xMap][newYMap].addAnimalsOnType(name);
-                    mapGod.cellMap[xMap][yMap].removeAnimalsOnType(name);
+                    generalMapGod.cellMap[xMap][newYMap].addAnimalsOnType(name);
+                    generalMapGod.cellMap[xMap][yMap].removeAnimalsOnType(name);
                     yMap = newYMap;
                 }
 
@@ -183,33 +187,33 @@ public abstract class Animal {
                         newXMap = 0;
                     }
                     if (newXMap == xMap) {
-                        setCountCycleMove(mapGod.getCountCycle());
+                        setCountCycleMove(generalMapGod.getCountCycle());
                         return false;
                     }
 
-                    int countAnimalsOnTypeNewCell = mapGod.cellMap[newXMap][yMap].getAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = generalMapGod.cellMap[newXMap][yMap].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
-                        setCountCycleMove(mapGod.getCountCycle());
+                        setCountCycleMove(generalMapGod.getCountCycle());
                         return false;
                     }
 
-                    mapGod.cellMap[newXMap][yMap].addAnimalsOnType(name);
-                    mapGod.cellMap[xMap][yMap].removeAnimalsOnType(name);
+                    generalMapGod.cellMap[newXMap][yMap].addAnimalsOnType(name);
+                    generalMapGod.cellMap[xMap][yMap].removeAnimalsOnType(name);
                     xMap = newXMap;
                 }
 
-                setCountCycleMove(mapGod.getCountCycle());
+                setCountCycleMove(generalMapGod.getCountCycle());
 
                 int newX = xMap;
                 int newY = yMap;
                 ArrayList<Animal> newCellListAnimals;
-                if (mapGod.cellMap[newX][newY].listAnimals.containsKey(name)) {
-                    newCellListAnimals = mapGod.cellMap[newX][newY].listAnimals.get(name);
+                if (generalMapGod.cellMap[newX][newY].listAnimals.containsKey(name)) {
+                    newCellListAnimals = generalMapGod.cellMap[newX][newY].listAnimals.get(name);
                 } else {
                     newCellListAnimals = new ArrayList<>();
                 }
                 newCellListAnimals.add(this);
-                mapGod.cellMap[newX][newY].listAnimals.put(name, newCellListAnimals);
+                generalMapGod.cellMap[newX][newY].listAnimals.put(name, newCellListAnimals);
                 return true;
             }
         }

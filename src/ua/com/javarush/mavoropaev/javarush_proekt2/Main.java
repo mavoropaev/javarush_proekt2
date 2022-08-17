@@ -5,7 +5,7 @@ public class Main {
     private static final int MAP_SIZE_Y = 2;
 
     public static void main(String[] args){
-        Map mapGod = new Map(MAP_SIZE_X, MAP_SIZE_Y);
-        mapGod.start();
+        GeneralMap generalMapGod = new GeneralMap(MAP_SIZE_X, MAP_SIZE_Y);
+        generalMapGod.start();
     }
 }

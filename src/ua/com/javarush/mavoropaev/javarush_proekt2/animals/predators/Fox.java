@@ -13,4 +13,19 @@ public class Fox extends Predator {
         super(fox, x, y);
     }
 
+    @Override
+    public int getMaxPopulation() {
+        return MAX_COUNT_CELL;
+    }
+
+    @Override
+    public int getSpeed() {
+        return MAX_SPEED;
+    }
+
+    @Override
+    public double getWeight() {
+        return WEIGHT;
+    }
+
 }

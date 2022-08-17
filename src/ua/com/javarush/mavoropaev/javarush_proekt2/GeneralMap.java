@@ -1,17 +1,18 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
+import ua.com.javarush.mavoropaev.javarush_proekt2.animals.TableEatRandom;
+import ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores.*;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators.*;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
+import java.util.*;
 
-public class Map {
+public class GeneralMap {
     private int sizeX;
     private int sizeY;
     private int countCycle;
 
+    public final int COUNT_TYPE_FOODS = 16;
     public final int COUNT_DIRECTION = 4;
     public final int UP_DIR = 1;
     public final int RIGHT_DIR = 2;
@@ -19,9 +20,18 @@ public class Map {
     public final int LEFT_DIR = 4;
 
     public Cell[][] cellMap;
+    public Plants[][] plantsMap;
+    TableEatRandom tableEatRandom;
+
+    public GeneralMap(int sizeX, int sizeY) {
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        cellMap = new Cell[sizeX][sizeY];
+        plantsMap = new Plants[sizeX][sizeY];
+    }
 
     public void newCycle(){
-        printState();
+        //printState();
         countCycle++;
     }
 
@@ -33,7 +43,7 @@ public class Map {
                 for (NameAnimals name : NameAnimals.values()) {
                     if (cellMap[x][y].listAnimals.containsKey(name)) {
                         System.out.println("Cycle : nameAnimal = " + name + " : (" + x + ";" + y + ")" +
-                                cellMap[x][y].contAnimalsOnType.get(name));
+                                cellMap[x][y].countAnimalsOnType.get(name));
 
                     }
                 }
@@ -41,20 +51,23 @@ public class Map {
         }
         System.out.println("-------------------------");
     }
+
     public int getCountCycle() {
         return countCycle;
-    }
-
-    public Map(int sizeX, int sizeY) {
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
-        cellMap = new Cell[sizeX][sizeY];
     }
 
     public void initCellMap(){
         for (int x = 0; x < sizeX; x++){
             for (int y = 0; y < sizeY; y++){
                 cellMap[x][y] = new Cell(x, y);
+            }
+        }
+    }
+    public void initPlantsMap(){
+        for (int x = 0; x < sizeX; x++){
+            for (int y = 0; y < sizeY; y++){
+                plantsMap[x][y] = new Plants(x, y);
+                plantsMap[x][y].setInitBiomassWeight();
             }
         }
     }
@@ -68,15 +81,138 @@ public class Map {
     }
 
     public void start(){
-        Random random = new Random();
-        ArrayList<Animal> animalsList;
-
+        tableEatRandom = new TableEatRandom();
         initCellMap();
+        initPlantsMap();
         initAnimals();
+        //moveAllAnimals();
+        eatAllAnimals();
+
+    }
+    private void eatAllAnimals(){
+        ArrayList<Animal> animalsList;
+        Random random = new Random();
 
         for(int i = 0; i < 10; i++) {
             newCycle();
+            for (int x = 0; x < sizeX; x++) {
+                for (int y = 0; y < sizeY; y++) {
+                    for (NameAnimals name : NameAnimals.values()) {
+                        if (cellMap[x][y].listAnimals.containsKey(name)) {
+                            animalsList = cellMap[x][y].listAnimals.get(name);
 
+                            Iterator<Animal> animalsIterator = animalsList.iterator();
+                            while (animalsIterator.hasNext()){
+                                Animal animal = animalsIterator.next();
+                                
+                                NameAnimals nameFoods = getFoods(name, x, y);
+                                boolean trueEat = eatFoods(name, nameFoods, x, y);
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    private NameAnimals getFoods(NameAnimals nameAnimal, int x, int y){
+        HashMap<NameAnimals, ArrayList<Animal>> listAllFoods = new HashMap<>();
+        HashMap<NameAnimals, Double> listMassFactor = new HashMap<>();
+        ArrayList<Animal> listNameFoods;
+        NameFoods nameFoods;
+        NameAnimals nameAnimalFood;
+
+        int numberAnimal = tableEatRandom.getNumberToAnimal(nameAnimal);
+        int probabilityEat = 0;
+        int countAllAnimalsCell = 0;
+        int countAnimalsOnTypeCell = 0;
+        double massFactor;
+        double weightAnimal;
+
+        for (int numFood = 0; numFood < COUNT_TYPE_FOODS; numFood++) {
+            probabilityEat = tableEatRandom.getTableEatRandom(numberAnimal, numFood);
+            nameAnimalFood = tableEatRandom.getAnimalToNumber(numFood);
+            if (probabilityEat > 0){
+                countAnimalsOnTypeCell = cellMap[x][y].getCountAnimalsOnType(nameAnimalFood);
+                countAllAnimalsCell += countAnimalsOnTypeCell;
+                if (countAnimalsOnTypeCell > 0) {
+                    weightAnimal = cellMap[x][y].listAnimals.get(nameAnimalFood).get(0).getWeight();
+                    massFactor = countAnimalsOnTypeCell * probabilityEat * weightAnimal;
+                    listMassFactor.put(nameAnimalFood, massFactor);
+                }
+            }
+        }
+
+        double maxMassFactor = 0;
+        NameAnimals maxNameAnimal = null;
+        for (Map.Entry<NameAnimals, Double> pair : listMassFactor.entrySet()){
+            NameAnimals key = pair.getKey();
+            Double value = pair.getValue();
+            if (value > maxMassFactor){
+                maxMassFactor = value;
+                maxNameAnimal = key;
+            }
+        }
+
+        return maxNameAnimal;
+    }
+
+    private boolean eatFoods(NameAnimals nameAnimal, NameAnimals nameFood, int x, int y){
+        Random random = new Random();
+        int numberAnimal = tableEatRandom.getNumberToAnimal(nameAnimal);
+        int numberFood = tableEatRandom.getNumberToAnimal(nameFood);
+        int probabilityEat = tableEatRandom.getTableEatRandom(numberAnimal, numberFood);
+
+        int chanceCatchingAnimal = 0;
+        while (chanceCatchingAnimal == 0){
+            chanceCatchingAnimal = random.nextInt(100);
+        }
+        if (chanceCatchingAnimal <= probabilityEat){
+            //едим!!!!
+            cellMap[x][y].removeAnimalsOnType(nameFood);
+            cellMap[x][y].listAnimals.get(nameFood).remove(0);
+
+            System.out.println("numberAnimal = " + numberAnimal);
+            System.out.println("name = " + nameAnimal);
+            System.out.println("chanceCatchingAnimal = " + chanceCatchingAnimal);
+            System.out.println("numberEat = " + numberFood);
+            System.out.println("name eat = " + tableEatRandom.getFoodToNumber(numberFood));
+
+        }
+        return true;
+    }
+
+    private NameAnimals getFoodsRandom(NameAnimals nameAnimal, int x, int y){
+        Random random = new Random();
+        int numberAnimal = tableEatRandom.getNumberToAnimal(nameAnimal);
+
+        //step - 2 : eat - animal.eat()
+        int probabilityEat = 0;
+        int numberFood = 0;
+        while (probabilityEat == 0) {
+            numberFood = random.nextInt(COUNT_TYPE_FOODS);
+            if (numberAnimal == numberFood) continue;
+            probabilityEat = tableEatRandom.getTableEatRandom(numberAnimal, numberFood);
+            if (probabilityEat > 0){
+                //нужно проверить, что найдем такое животное(еду) в квадрате
+                if (tableEatRandom.getFoodToNumber(numberFood) != NameFoods.PLANTS) {
+                    if (cellMap[x][y].listAnimals.containsKey(tableEatRandom.getAnimalToNumber(numberFood))){
+                        //еду нашли, осталось поймать...
+                        break;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
+    private void moveAllAnimals() {
+        ArrayList<Animal> animalsList;
+        for(int i = 0; i < 10; i++) {
+            newCycle();
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
                     for (NameAnimals name : NameAnimals.values()) {
@@ -87,12 +223,13 @@ public class Map {
                             while (animalsIterator.hasNext()){
                                 Animal animal = animalsIterator.next();
                                 //step - 1 : move - animal.move()
+                                //1 - вариант метод move объекта animal
                                 if (animal.move(this, animal.getSpeed(), animal.getMaxPopulation())){
                                     printState();
                                     animalsIterator.remove();
                                 }
-
-                                // if (animalsMove(x, y, name, animal)){
+                                //2 - вариант метод move объекта generalMap
+                                // if (animalMove(x, y, name, animal)){
                                 //    animalsIterator.remove();
                                 //}
                             }
@@ -103,13 +240,13 @@ public class Map {
         }
     }
 
-    private boolean animalsMove(int x, int y, NameAnimals name, Animal animal) {
+    private boolean animalMove(int x, int y, NameAnimals name, Animal animal) {
         Random random = new Random();
         if (animal.getCountCycleMove() < getCountCycle()) {
             if (animal.getSpeed() > 0) {
                 int countStep = 0;
                 while (countStep == 0){
-                    countStep = random.nextInt(animal.getSpeed());
+                    countStep = random.nextInt(animal.getSpeed() + 1);
                 }
                 int direction = 0;
                 while (direction == 0) {
@@ -125,7 +262,7 @@ public class Map {
                         animal.setCountCycleMove(getCountCycle());
                         return false;
                     }
-                    int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
                         animal.setCountCycleMove(getCountCycle());
                         return false;
@@ -144,7 +281,7 @@ public class Map {
                         animal.setCountCycleMove(getCountCycle());
                         return false;
                     }
-                    int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
                         animal.setCountCycleMove(getCountCycle());
                         return false;
@@ -163,7 +300,7 @@ public class Map {
                         animal.setCountCycleMove(getCountCycle());
                         return false;
                     }
-                    int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
                         animal.setCountCycleMove(getCountCycle());
                         return false;
@@ -182,7 +319,7 @@ public class Map {
                         animal.setCountCycleMove(getCountCycle());
                         return false;
                     }
-                    int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
                         animal.setCountCycleMove(getCountCycle());
                         return false;
@@ -228,7 +365,7 @@ public class Map {
                 //WOLF
                 int count = random.nextInt(Wolf.MAX_COUNT_CELL + 1);
 
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.WOLF, count);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.WOLF, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.WOLF)) {
@@ -240,10 +377,10 @@ public class Map {
                     list.add(new Wolf(NameAnimals.WOLF, x, y));
                     cellMap[x][y].listAnimals.put(NameAnimals.WOLF, list);
                 }
-            /*
+
                 //BOA_CONSTRICTOR
-                count = random.nextInt(BoaConstrictor.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.BOA_CONSTRICTOR, count);
+                count = random.nextInt(BoaConstrictor.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.BOA_CONSTRICTOR, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.BOA_CONSTRICTOR)) {
@@ -257,8 +394,8 @@ public class Map {
                 }
 
                 //FOX
-                count = random.nextInt(Fox.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.FOX, count);
+                count = random.nextInt(Fox.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.FOX, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.FOX)) {
@@ -272,8 +409,8 @@ public class Map {
                 }
 
                 //BEAR
-                count = random.nextInt(Bear.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.BEAR, count);
+                count = random.nextInt(Bear.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.BEAR, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.BEAR)) {
@@ -287,8 +424,8 @@ public class Map {
                 }
 
                 //EAGLE
-                count = random.nextInt(Eagle.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.EAGLE, count);
+                count = random.nextInt(Eagle.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.EAGLE, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.EAGLE)) {
@@ -302,8 +439,8 @@ public class Map {
                 }
 
                 //HORSE
-                count = random.nextInt(Horse.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.HORSE, count);
+                count = random.nextInt(Horse.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.HORSE, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.HORSE)) {
@@ -317,8 +454,8 @@ public class Map {
                 }
 
                 //DEER
-                count = random.nextInt(Deer.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.DEER, count);
+                count = random.nextInt(Deer.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.DEER, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.DEER)) {
@@ -332,9 +469,9 @@ public class Map {
                 }
 
                 //RABBIT
-                count = random.nextInt(Rabbit.MAX_COUNT_CELL);
+                count = random.nextInt(Rabbit.MAX_COUNT_CELL) + 1;
 
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.RABBIT, count);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.RABBIT, count);
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.RABBIT)) {
                         list = cellMap[x][y].listAnimals.get(NameAnimals.RABBIT);
@@ -347,8 +484,8 @@ public class Map {
                 }
 
                 //MOUSE
-                count = random.nextInt(Mouse.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.MOUSE, count);
+                count = random.nextInt(Mouse.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.MOUSE, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.MOUSE)) {
@@ -362,8 +499,8 @@ public class Map {
                 }
 
                 //GOAT
-                count = random.nextInt(Goat.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.GOAT, count);
+                count = random.nextInt(Goat.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.GOAT, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.GOAT)) {
@@ -377,8 +514,8 @@ public class Map {
                 }
 
                 //SHEEP
-                count = random.nextInt(Sheep.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.SHEEP, count);
+                count = random.nextInt(Sheep.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.SHEEP, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.SHEEP)) {
@@ -392,8 +529,8 @@ public class Map {
                 }
 
                 //WILD_BOAR
-                count = random.nextInt(WildBoar.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.WILD_BOAR, count);
+                count = random.nextInt(WildBoar.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.WILD_BOAR, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.WILD_BOAR)) {
@@ -407,8 +544,8 @@ public class Map {
                 }
 
                 //BUFFALO
-                count = random.nextInt(Buffalo.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.BUFFALO, count);
+                count = random.nextInt(Buffalo.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.BUFFALO, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.BUFFALO)) {
@@ -422,8 +559,8 @@ public class Map {
                 }
 
                 //DUCK
-                count = random.nextInt(Duck.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.DUCK, count);
+                count = random.nextInt(Duck.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.DUCK, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.DUCK)) {
@@ -437,8 +574,8 @@ public class Map {
                 }
 
                 //CATERPILLAR
-                count = random.nextInt(Caterpillar.MAX_COUNT_CELL);
-                cellMap[x][y].contAnimalsOnType.put(NameAnimals.CATERPILLAR, count);
+                count = random.nextInt(Caterpillar.MAX_COUNT_CELL + 1);
+                cellMap[x][y].countAnimalsOnType.put(NameAnimals.CATERPILLAR, count);
 
                 for (int i = 0; i < count; i++){
                     if (cellMap[x][y].listAnimals.containsKey(NameAnimals.CATERPILLAR)) {
@@ -450,10 +587,11 @@ public class Map {
                     list.add(new Caterpillar(NameAnimals.CATERPILLAR, x, y));
                     cellMap[x][y].listAnimals.put(NameAnimals.CATERPILLAR, list);
                 }
-            */
+
 
             }
         }
+        /*
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 for (NameAnimals name : NameAnimals.values()) {
@@ -465,6 +603,8 @@ public class Map {
                 }
             }
         }
+
+         */
     }
 
 

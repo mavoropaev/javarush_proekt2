@@ -13,4 +13,19 @@ public class Sheep extends Herbivore {
         super(sheep, x, y);
     }
 
+    @Override
+    public int getMaxPopulation() {
+        return MAX_COUNT_CELL;
+    }
+
+    @Override
+    public int getSpeed() {
+        return MAX_SPEED;
+    }
+
+    @Override
+    public double getWeight() {
+        return WEIGHT;
+    }
+
 }

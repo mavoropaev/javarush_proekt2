@@ -4,14 +4,13 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Cell {
     private int x;
     private int y;
 
     public HashMap<NameAnimals, ArrayList<Animal>> listAnimals = new HashMap<>();
-    public HashMap<NameAnimals, Integer> contAnimalsOnType = new HashMap<>();
+    public HashMap<NameAnimals, Integer> countAnimalsOnType = new HashMap<>();
 
     public Cell() {
     }
@@ -38,22 +37,22 @@ public class Cell {
     }
 
     public void addAnimalsOnType(NameAnimals name){
-        if (contAnimalsOnType.containsKey(name)){
-            int count = contAnimalsOnType.get(name);
+        if (countAnimalsOnType.containsKey(name)){
+            int count = countAnimalsOnType.get(name);
             count++;
-            contAnimalsOnType.put(name, count);
+            countAnimalsOnType.put(name, count);
         }
     }
     public void removeAnimalsOnType(NameAnimals name){
-        if (contAnimalsOnType.containsKey(name)){
-            int count = contAnimalsOnType.get(name);
+        if (countAnimalsOnType.containsKey(name)){
+            int count = countAnimalsOnType.get(name);
             count--;
-            contAnimalsOnType.put(name, count);
+            countAnimalsOnType.put(name, count);
         }
     }
-    public int getAnimalsOnType(NameAnimals name){
-        if (contAnimalsOnType.containsKey(name)){
-            return contAnimalsOnType.get(name);
+    public int getCountAnimalsOnType(NameAnimals name){
+        if (countAnimalsOnType.containsKey(name)){
+            return countAnimalsOnType.get(name);
         }
         return 0;
     }

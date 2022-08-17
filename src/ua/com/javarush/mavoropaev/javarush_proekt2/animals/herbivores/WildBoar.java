@@ -13,4 +13,19 @@ public class WildBoar extends Herbivore {
         super(wildBoar,x,y);
     }
 
+    @Override
+    public int getMaxPopulation() {
+        return MAX_COUNT_CELL;
+    }
+
+    @Override
+    public int getSpeed() {
+        return MAX_SPEED;
+    }
+
+    @Override
+    public double getWeight() {
+        return WEIGHT;
+    }
+
 }
