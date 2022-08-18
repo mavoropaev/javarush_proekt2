@@ -1,17 +1,18 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.GeneralMap;
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameAnimals;
+import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Animal {
-    private NameAnimals name;
+    private NameItem name;
     private double weight;
     private int maxPopulation;
     private int speed;
-    private double weightEat;
+    private double maxWeightEat;
+    private double currentWeightEat;
     private int countCycleMove;
     private int countCycleEat;
     private int countCycleReproduction;
@@ -21,47 +22,41 @@ public abstract class Animal {
     public final int RIGHT_DIR = 2;
     public final int DOWN_DIR = 3;
     public final int LEFT_DIR = 4;
-
-    public void setCountCycleReproduction(int countCycleReproduction) {
-        this.countCycleReproduction = countCycleReproduction;
-    }
-
-    public int getCountCycleReproduction() {
-        return countCycleReproduction;
-    }
-
-    public void setCountCycleEat(int countCycleEat) {
-        this.countCycleEat = countCycleEat;
-    }
-
-    public int getCountCycleEat() {
-        return countCycleEat;
-    }
-
-    public void setCountCycleMove(int countCycleMove) {
-        this.countCycleMove = countCycleMove;
-    }
-
-    public int getCountCycleMove() {
-        return countCycleMove;
-    }
-
     public int xMap;
     public int yMap;
 
     public abstract void eat();
-
     public abstract void reproduction();
     public abstract void dead();
 
-    public void setName(NameAnimals name) {
+    public int getCountCycleReproduction() {
+        return countCycleReproduction;
+    }
+    public void setCountCycleEat(int countCycleEat) {
+        this.countCycleEat = countCycleEat;
+    }
+    public int getCountCycleEat() {
+        return countCycleEat;
+    }
+    public void setCountCycleMove(int countCycleMove) {
+        this.countCycleMove = countCycleMove;
+    }
+    public int getCountCycleMove() {
+        return countCycleMove;
+    }
+
+    public void setName(NameItem name) {
         this.name = name;
     }
 
-    public Animal(NameAnimals name, int xMap, int yMap) {
+    public Animal(NameItem name, int xMap, int yMap) {
         this.name = name;
         this.xMap = xMap;
         this.yMap = yMap;
+    }
+
+    public void setCountCycleReproduction(int countCycleReproduction) {
+        this.countCycleReproduction = countCycleReproduction;
     }
 
     public void setWeight(double weight) {
@@ -71,37 +66,41 @@ public abstract class Animal {
     public void setMaxPopulation(int maxPopulation) {
         this.maxPopulation = maxPopulation;
     }
-
     public void setSpeed(int speed) {
         this.speed = speed;
     }
-
-    public void setWeightEat(double weightEat) {
-        this.weightEat = weightEat;
+    public void setMaxWeightEat(double maxWeightEat) {
+        this.maxWeightEat = maxWeightEat;
+    }
+    public void setCurrentWeightEat(double currentWeightEat) {
+        this.currentWeightEat = currentWeightEat;
+    }
+    public double getCurrentWeightEat() {
+        return currentWeightEat;
+    }
+    public void addCurrentWeightEat(double weight) {
+        currentWeightEat += weight;
+        currentWeightEat = Math.min(currentWeightEat, maxWeightEat);
     }
 
-    protected Animal() {
-    }
-
-    public NameAnimals getName() {
+    public NameItem getName() {
         return name;
     }
-
     public double getWeight() {
         return weight;
     }
-
     public int getMaxPopulation() {
         return maxPopulation;
     }
-
     public int getSpeed() {
         return speed;
     }
-
-    public double getWeightEat() {
-        return weightEat;
+    public double getMaxWeightEat() {
+        return maxWeightEat;
     }
+
+
+
 
     public boolean move(GeneralMap generalMapGod, int maxCountStep, int maxPopulation) {
         //step - 1 : move - animal.move()

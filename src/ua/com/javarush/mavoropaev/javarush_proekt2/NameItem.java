@@ -1,6 +1,6 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2;
 
-public enum NameAnimals {
+public enum NameItem {
     WOLF,
     BOA_CONSTRICTOR,
     FOX,
@@ -15,5 +15,6 @@ public enum NameAnimals {
     WILD_BOAR,
     BUFFALO,
     DUCK,
-    CATERPILLAR
+    CATERPILLAR,
+    PLANTS
 }

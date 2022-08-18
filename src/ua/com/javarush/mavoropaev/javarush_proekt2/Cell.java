@@ -9,8 +9,8 @@ public class Cell {
     private int x;
     private int y;
 
-    public HashMap<NameAnimals, ArrayList<Animal>> listAnimals = new HashMap<>();
-    public HashMap<NameAnimals, Integer> countAnimalsOnType = new HashMap<>();
+    public HashMap<NameItem, ArrayList<Animal>> listAnimals = new HashMap<>();
+    public HashMap<NameItem, Integer> countAnimalsOnType = new HashMap<>();
 
     public Cell() {
     }
@@ -36,21 +36,21 @@ public class Cell {
         this.y = y;
     }
 
-    public void addAnimalsOnType(NameAnimals name){
+    public void addAnimalsOnType(NameItem name){
         if (countAnimalsOnType.containsKey(name)){
             int count = countAnimalsOnType.get(name);
             count++;
             countAnimalsOnType.put(name, count);
         }
     }
-    public void removeAnimalsOnType(NameAnimals name){
+    public void removeAnimalsOnType(NameItem name){
         if (countAnimalsOnType.containsKey(name)){
             int count = countAnimalsOnType.get(name);
             count--;
             countAnimalsOnType.put(name, count);
         }
     }
-    public int getCountAnimalsOnType(NameAnimals name){
+    public int getCountAnimalsOnType(NameItem name){
         if (countAnimalsOnType.containsKey(name)){
             return countAnimalsOnType.get(name);
         }

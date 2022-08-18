@@ -1,6 +1,6 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameAnimals;
+import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Herbivore;
 
 public class Caterpillar extends Herbivore {
@@ -9,8 +9,11 @@ public class Caterpillar extends Herbivore {
     public static  final int MAX_SPEED = 0;
     public static  final double MAX_EAT = 0;
 
-    public Caterpillar(NameAnimals caterpillar, int x, int y) {
+    public Caterpillar(NameItem caterpillar, int x, int y) {
+
         super(caterpillar, x, y);
+        super.setMaxWeightEat(MAX_EAT);
+        super.setWeight(WEIGHT);
     }
 
     @Override

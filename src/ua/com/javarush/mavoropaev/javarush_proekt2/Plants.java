@@ -1,6 +1,7 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2;
 
 public class Plants {
+    private NameItem name;
     private int xMap;
     private int yMap;
     //private final double MAX_BIOMASS_WEIGHT = 200;
@@ -9,10 +10,11 @@ public class Plants {
     public static final int MAX_SPEED = 0;
     public static final double MAX_EAT = 0;
 
-    private double currentBiomassWeight;
+    private int currentBiomassWeight;
     private double biomassGrowthPerCycle;
 
-    public Plants(int xMap, int yMap) {
+    public Plants(NameItem name, int xMap, int yMap) {
+        this.name = name;
         this.xMap = xMap;
         this.yMap = yMap;
     }
@@ -25,7 +27,7 @@ public class Plants {
         this.yMap = yMap;
     }
 
-    public void setCurrentBiomassWeight(double currentBiomassWeight) {
+    public void setCurrentBiomassWeight(int currentBiomassWeight) {
         this.currentBiomassWeight = currentBiomassWeight;
     }
     public void setInitBiomassWeight() {
@@ -49,11 +51,20 @@ public class Plants {
         return MAX_COUNT_CELL;
     }
 
-    public double getCurrentBiomassWeight() {
+    public int getCurrentBiomassWeight() {
         return currentBiomassWeight;
     }
 
     public double getBiomassGrowthPerCycle() {
         return biomassGrowthPerCycle;
     }
+
+    public double getWeight(){
+        return WEIGHT;
+    }
+
+    public void subtractPlants(){
+        this.currentBiomassWeight -= (int)WEIGHT;
+    }
+
 }

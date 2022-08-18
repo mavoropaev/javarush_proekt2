@@ -1,10 +1,10 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.GeneralMap;
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameAnimals;
+import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 
 public class Herbivore extends Animal {
-    public Herbivore(NameAnimals herbivore, int x, int y) {
+    public Herbivore(NameItem herbivore, int x, int y) {
         super(herbivore, x, y);
     }
 
