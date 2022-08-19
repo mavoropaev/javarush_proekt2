@@ -10,11 +10,16 @@ public class BoaConstrictor extends Predator {
     public static final double MAX_EAT = 3;
 
     public BoaConstrictor(NameItem boaConstrictor, int x, int y) {
-
         super(boaConstrictor, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
     }
+
+    @Override
+    public BoaConstrictor newObject(NameItem name, int x, int y){
+        return new BoaConstrictor(name, x, y);
+    }
+
     @Override
     public int getMaxPopulation() {
         return MAX_COUNT_CELL;

@@ -10,10 +10,14 @@ public class WildBoar extends Herbivore {
     public static final double MAX_EAT = 50;
 
     public WildBoar(NameItem wildBoar, int x, int y) {
-
         super(wildBoar,x,y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+    }
+
+    @Override
+    public WildBoar newObject(NameItem name, int x, int y){
+        return new WildBoar(name, x, y);
     }
 
     @Override

@@ -2,11 +2,18 @@ package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.GeneralMap;
 import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators.Wolf;
 
 public class Herbivore extends Animal {
     public Herbivore(NameItem herbivore, int x, int y) {
         super(herbivore, x, y);
     }
+
+    @Override
+    public Herbivore newObject(NameItem herbivore, int x, int y){
+        return new Herbivore(herbivore, x, y);
+    }
+
 
     @Override
     public void eat() {

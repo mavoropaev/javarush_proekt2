@@ -10,10 +10,14 @@ public class Mouse extends Herbivore {
     public static final double MAX_EAT = 0.01;
 
     public Mouse(NameItem mouse, int x, int y) {
-
         super(mouse, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+    }
+
+    @Override
+    public Mouse newObject(NameItem name, int x, int y){
+        return new Mouse(name, x, y);
     }
 
     @Override

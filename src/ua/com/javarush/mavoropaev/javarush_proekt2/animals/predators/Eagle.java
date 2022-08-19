@@ -10,10 +10,14 @@ public class Eagle extends Predator {
     public static final double MAX_EAT = 1;
 
     public Eagle(NameItem eagle, int x, int y) {
-
         super(eagle, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+    }
+
+    @Override
+    public Eagle newObject(NameItem name, int x, int y){
+        return new Eagle(name, x, y);
     }
 
     @Override

@@ -5,7 +5,13 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 
 public class Predator extends Animal {
     public Predator(NameItem predator, int x, int y) {
+
         super(predator, x, y);
+    }
+
+    @Override
+    public Predator newObject(NameItem predator, int x, int y){
+        return new Predator(predator, x, y);
     }
 
     @Override

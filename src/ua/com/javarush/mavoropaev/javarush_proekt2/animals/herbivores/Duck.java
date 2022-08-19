@@ -10,10 +10,14 @@ public class Duck extends Herbivore {
     public static final double MAX_EAT = 0.15;
 
     public Duck(NameItem duck, int x, int y) {
-
         super(duck, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+    }
+
+    @Override
+    public Duck newObject(NameItem name, int x, int y){
+        return new Duck(name, x, y);
     }
 
     @Override

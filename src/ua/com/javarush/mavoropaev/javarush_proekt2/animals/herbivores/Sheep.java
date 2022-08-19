@@ -10,10 +10,14 @@ public class Sheep extends Herbivore {
     public static  final double MAX_EAT = 15;
 
     public Sheep(NameItem sheep, int x, int y) {
-
         super(sheep, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+    }
+
+    @Override
+    public Sheep newObject(NameItem name, int x, int y){
+        return new Sheep(name, x, y);
     }
 
     @Override

@@ -2,6 +2,7 @@ package ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Predator;
+import ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores.WildBoar;
 
 public class Bear extends Predator {
     public static final double WEIGHT = 500;
@@ -13,6 +14,11 @@ public class Bear extends Predator {
         super(bear, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+    }
+
+    @Override
+    public Bear newObject(NameItem name, int x, int y){
+        return new Bear(name, x, y);
     }
 
     @Override

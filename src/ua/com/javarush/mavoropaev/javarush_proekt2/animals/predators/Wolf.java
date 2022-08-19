@@ -11,10 +11,14 @@ public class Wolf extends Predator {
 
 
     public Wolf(NameItem wolf, int x, int y) {
-
         super(wolf, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+    }
+
+    @Override
+    public Wolf newObject(NameItem name, int x, int y){
+        return new Wolf(name, x, y);
     }
 
     @Override

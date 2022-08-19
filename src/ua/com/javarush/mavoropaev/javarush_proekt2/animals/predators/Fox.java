@@ -10,10 +10,14 @@ public class Fox extends Predator {
     public static final double MAX_EAT = 2;
 
     public Fox(NameItem fox, int x, int y) {
-
         super(fox, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+    }
+
+    @Override
+    public Fox newObject(NameItem name, int x, int y){
+        return new Fox(name, x, y);
     }
 
     @Override

@@ -10,10 +10,14 @@ public class Rabbit extends Herbivore {
     public static final double MAX_EAT = 0.45;
 
     public Rabbit(NameItem rabbit, int x, int y) {
-
         super(rabbit, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+    }
+
+    @Override
+    public Rabbit newObject(NameItem name, int x, int y){
+        return new Rabbit(name, x, y);
     }
 
     @Override

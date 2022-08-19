@@ -2,6 +2,7 @@ package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.GeneralMap;
 import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators.Wolf;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -54,6 +55,8 @@ public abstract class Animal {
         this.xMap = xMap;
         this.yMap = yMap;
     }
+
+    public abstract Animal newObject(NameItem wolf, int x, int y);
 
     public void setCountCycleReproduction(int countCycleReproduction) {
         this.countCycleReproduction = countCycleReproduction;

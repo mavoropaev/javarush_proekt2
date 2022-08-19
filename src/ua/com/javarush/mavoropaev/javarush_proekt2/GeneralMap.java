@@ -36,7 +36,8 @@ public class GeneralMap {
         initPlantsMap();
         initAnimals();
         //moveAllAnimals();
-        eatAllAnimals();
+        //eatAllAnimals();
+        reproductionAllAnimals();
 
     }
 
@@ -46,16 +47,14 @@ public class GeneralMap {
     }
 
     public void printState(){
-        System.out.println("cycle = " + countCycle);
+        System.out.println("cycle = " + getCountCycle());
         System.out.println("-------------------------");
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                for (NameItem name : NameItem.values()) {
-                    if (cellMap[x][y].listAnimals.containsKey(name)) {
-                        System.out.println("Cycle : nameAnimal = " + name + " : (" + x + ";" + y + ")" +
-                                cellMap[x][y].countAnimalsOnType.get(name));
+                for (NameItem name : cellMap[x][y].listAnimals.keySet()) {
 
-                    }
+                    System.out.println("Cycle : nameAnimal = " + name + " : (" + x + ";" + y + ")" +
+                            cellMap[x][y].countAnimalsOnType.get(name));
                 }
             }
         }
@@ -90,6 +89,61 @@ public class GeneralMap {
         return sizeY;
     }
 
+    private void reproductionAllAnimals(){
+        ArrayList<Animal> animalsList;
+        printState();
+
+        for(int i = 0; i < 3; i++) {
+            newCycle();
+            System.out.println("step = " + i);
+            for (int x = 0; x < sizeX; x++) {
+                for (int y = 0; y < sizeY; y++) {
+                    System.out.println("cell (" + x + " ; " + y +")");
+                    for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+                        System.out.println("------------> " + name + " <-------------");
+                        animalsList = cellMap[x][y].listAnimals.get(name);
+                        int countAnimals = animalsList.size();
+                        ArrayList<Animal> newAnimals = new ArrayList<>();
+
+                        for (int iteration = 0; iteration < countAnimals; iteration++){
+                            if (iteration < countAnimals - iteration - 1){
+                                if (animalsList.get(iteration).getCountCycleReproduction() < getCountCycle() &&
+                                        animalsList.get(countAnimals - iteration - 1).getCountCycleReproduction() < getCountCycle()){
+                                        Animal newAnimal = animalsList.get(iteration).newObject(name, x, y);
+                                        newAnimal.setCountCycleReproduction(getCountCycle());
+                                        newAnimals.add(newAnimal);
+                                    System.out.println("new object " + name + " : " +newAnimal.toString());
+                                        animalsList.get(iteration).setCountCycleReproduction(getCountCycle());
+                                        animalsList.get(countAnimals - iteration - 1).setCountCycleReproduction(getCountCycle());
+                                }
+                            }
+                            else if (iteration == countAnimals - iteration - 1) {
+                                animalsList.get(iteration).setCountCycleReproduction(getCountCycle());
+                            }
+                            else{
+                                break;
+                            }
+                        }
+
+                        ArrayList<Animal> newCellListAnimals = cellMap[x][y].listAnimals.get(name);
+                        System.out.println("new object = " + newAnimals.size());
+                        System.out.println("count object = " + newCellListAnimals.size());
+                        System.out.println("max object = " + newCellListAnimals.get(0).getMaxPopulation());
+                        for (int num = 0; num < newAnimals.size(); num++){
+                            if (newCellListAnimals.size() < newCellListAnimals.get(0).getMaxPopulation()) {
+                                newCellListAnimals.add(newAnimals.get(num));
+                                cellMap[x][y].addAnimalsOnType(name);
+                            }
+                        }
+                        cellMap[x][y].listAnimals.put(name, newCellListAnimals);
+                    }
+                }
+            }
+            printState();
+        }
+
+    }
+
 
 
     private void eatAllAnimals(){
@@ -103,7 +157,6 @@ public class GeneralMap {
                     System.out.println("cell (" + x + " ; " + y +")");
                     for (NameItem name : cellMap[x][y].listAnimals.keySet()){
                         System.out.println(name);
-                        //if (cellMap[x][y].listAnimals.containsKey(name)) {
                         animalsList = cellMap[x][y].listAnimals.get(name);
 
                         Iterator<Animal> animalsIterator = animalsList.iterator();
@@ -119,9 +172,7 @@ public class GeneralMap {
                                     System.out.println("CurrentWeightEat = MaxWeightEat");
                                 }
                             }
-
                         }
-                        //}
                     }
                 }
             }
