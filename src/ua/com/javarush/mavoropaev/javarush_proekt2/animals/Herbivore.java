@@ -5,13 +5,13 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators.Wolf;
 
 public class Herbivore extends Animal {
-    public Herbivore(NameItem herbivore, int x, int y) {
-        super(herbivore, x, y);
+    public Herbivore(NameItem herbivore, StatusAnimals statusAnimals, int x, int y) {
+        super(herbivore, statusAnimals, x, y);
     }
 
     @Override
-    public Herbivore newObject(NameItem herbivore, int x, int y){
-        return new Herbivore(herbivore, x, y);
+    public Herbivore newObject(NameItem herbivore, StatusAnimals statusAnimals, int x, int y){
+        return new Herbivore(herbivore, statusAnimals, x, y);
     }
 
 

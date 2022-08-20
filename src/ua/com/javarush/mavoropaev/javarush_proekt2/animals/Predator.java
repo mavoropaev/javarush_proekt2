@@ -4,14 +4,14 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.GeneralMap;
 import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 
 public class Predator extends Animal {
-    public Predator(NameItem predator, int x, int y) {
+    public Predator(NameItem predator, StatusAnimals statusAnimals, int x, int y) {
 
-        super(predator, x, y);
+        super(predator, statusAnimals, x, y);
     }
 
     @Override
-    public Predator newObject(NameItem predator, int x, int y){
-        return new Predator(predator, x, y);
+    public Predator newObject(NameItem predator, StatusAnimals statusAnimals, int x, int y){
+        return new Predator(predator, statusAnimals, x, y);
     }
 
     @Override

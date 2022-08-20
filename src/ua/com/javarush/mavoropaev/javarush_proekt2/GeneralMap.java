@@ -1,6 +1,7 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
+import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.TableEatProbability;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores.*;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators.*;
@@ -22,6 +23,7 @@ public class GeneralMap {
     public Cell[][] cellMap;
     public Plants[][] plantsMap;
     TableEatProbability tableEatProbability;
+    GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
 
     public GeneralMap(int sizeX, int sizeY) {
         this.sizeX = sizeX;
@@ -35,9 +37,18 @@ public class GeneralMap {
         initCellMap();
         initPlantsMap();
         initAnimals();
-        //moveAllAnimals();
-        //eatAllAnimals();
-        reproductionAllAnimals();
+
+        for (int i = 0; i < 4; i++) {
+            System.out.println("step = " + (i + 1));
+            newCycle();
+            checkDeathAnimals();
+            restorePlants();
+            eatAllAnimals();
+            reproductionAllAnimals();
+            moveAllAnimals();
+        }
+
+
 
     }
 
@@ -51,10 +62,12 @@ public class GeneralMap {
         System.out.println("-------------------------");
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                for (NameItem name : cellMap[x][y].listAnimals.keySet()) {
+                if (x == 0 && y == 0) {
+                    for (NameItem name : cellMap[x][y].listAnimals.keySet()) {
 
-                    System.out.println("Cycle : nameAnimal = " + name + " : (" + x + ";" + y + ")" +
-                            cellMap[x][y].countAnimalsOnType.get(name));
+                        System.out.println("Cycle : nameAnimal = " + name + " : (" + x + ";" + y + ")" +
+                                cellMap[x][y].countAnimalsOnType.get(name));
+                    }
                 }
             }
         }
@@ -80,6 +93,13 @@ public class GeneralMap {
             }
         }
     }
+    public void restorePlants(){
+        for (int x = 0; x < sizeX; x++){
+            for (int y = 0; y < sizeY; y++){
+                plantsMap[x][y].setInitBiomassWeight();
+            }
+        }
+    }
 
     public int getSizeX() {
         return sizeX;
@@ -89,13 +109,45 @@ public class GeneralMap {
         return sizeY;
     }
 
+    private void checkDeathAnimals(){
+        ArrayList<Animal> animalsList;
+        printState();
+
+        //for(int i = 0; i < 4; i++) {
+          //  newCycle();
+
+            for (int x = 0; x < sizeX; x++) {
+                for (int y = 0; y < sizeY; y++) {
+                    for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+                        animalsList = cellMap[x][y].listAnimals.get(name);
+
+                        Iterator<Animal> animalsIterator = animalsList.iterator();
+                        while (animalsIterator.hasNext()){
+                            Animal animal = animalsIterator.next();
+
+                            if (animal.getCountCycleCheckDeath() < getCountCycle()){
+                                animal.setCurrentWeightEat(animal.getCurrentWeightEat() - animal.getMaxWeightEat() * 0.25);
+                                if (animal.getCurrentWeightEat() <= 0 && animal.getMaxWeightEat() > 0){
+                                    animalsIterator.remove();
+                                    cellMap[x][y].removeAnimalsOnType(name);
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            printState();
+        //}
+
+    }
+
     private void reproductionAllAnimals(){
         ArrayList<Animal> animalsList;
         printState();
 
-        for(int i = 0; i < 3; i++) {
-            newCycle();
-            System.out.println("step = " + i);
+        //for(int i = 0; i < 3; i++) {
+         //   newCycle();
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
                     System.out.println("cell (" + x + " ; " + y +")");
@@ -109,10 +161,10 @@ public class GeneralMap {
                             if (iteration < countAnimals - iteration - 1){
                                 if (animalsList.get(iteration).getCountCycleReproduction() < getCountCycle() &&
                                         animalsList.get(countAnimals - iteration - 1).getCountCycleReproduction() < getCountCycle()){
-                                        Animal newAnimal = animalsList.get(iteration).newObject(name, x, y);
+                                        Animal newAnimal = animalsList.get(iteration).newObject(name, StatusAnimals.NEWBORN, x, y);
                                         newAnimal.setCountCycleReproduction(getCountCycle());
                                         newAnimals.add(newAnimal);
-                                    System.out.println("new object " + name + " : " +newAnimal.toString());
+
                                         animalsList.get(iteration).setCountCycleReproduction(getCountCycle());
                                         animalsList.get(countAnimals - iteration - 1).setCountCycleReproduction(getCountCycle());
                                 }
@@ -126,9 +178,7 @@ public class GeneralMap {
                         }
 
                         ArrayList<Animal> newCellListAnimals = cellMap[x][y].listAnimals.get(name);
-                        System.out.println("new object = " + newAnimals.size());
-                        System.out.println("count object = " + newCellListAnimals.size());
-                        System.out.println("max object = " + newCellListAnimals.get(0).getMaxPopulation());
+
                         for (int num = 0; num < newAnimals.size(); num++){
                             if (newCellListAnimals.size() < newCellListAnimals.get(0).getMaxPopulation()) {
                                 newCellListAnimals.add(newAnimals.get(num));
@@ -140,7 +190,7 @@ public class GeneralMap {
                 }
             }
             printState();
-        }
+        //}
 
     }
 
@@ -150,8 +200,8 @@ public class GeneralMap {
         ArrayList<Animal> animalsList;
         Random random = new Random();
 
-        for(int i = 0; i < 3; i++) {
-            newCycle();
+        //for(int i = 0; i < 3; i++) {
+           // newCycle();
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
                     System.out.println("cell (" + x + " ; " + y +")");
@@ -176,7 +226,7 @@ public class GeneralMap {
                     }
                 }
             }
-        }
+        //}
     }
 
 
@@ -313,8 +363,8 @@ public class GeneralMap {
 
     private void moveAllAnimals() {
         ArrayList<Animal> animalsList;
-        for(int i = 0; i < 10; i++) {
-            newCycle();
+        //for(int i = 0; i < 10; i++) {
+            //newCycle();
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
                     //for (NameItem name : NameItem.values()) {
@@ -340,7 +390,7 @@ public class GeneralMap {
                     }
                 }
             }
-        }
+        //}
     }
 
     private boolean animalMove(int x, int y, NameItem name, Animal animal) {
@@ -477,7 +527,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Wolf(NameItem.WOLF, x, y));
+                    list.add(new Wolf(NameItem.WOLF, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.WOLF, list);
                 }
 
@@ -492,7 +542,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new BoaConstrictor(NameItem.BOA_CONSTRICTOR, x, y));
+                    list.add(new BoaConstrictor(NameItem.BOA_CONSTRICTOR, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.BOA_CONSTRICTOR, list);
                 }
 
@@ -507,7 +557,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Fox(NameItem.FOX, x, y));
+                    list.add(new Fox(NameItem.FOX, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.FOX, list);
                 }
 
@@ -522,7 +572,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Bear(NameItem.BEAR, x, y));
+                    list.add(new Bear(NameItem.BEAR, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.BEAR, list);
                 }
 
@@ -537,7 +587,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Eagle(NameItem.EAGLE, x, y));
+                    list.add(new Eagle(NameItem.EAGLE, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.EAGLE, list);
                 }
 
@@ -552,7 +602,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Horse(NameItem.HORSE, x, y));
+                    list.add(new Horse(NameItem.HORSE, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.HORSE, list);
                 }
 
@@ -567,7 +617,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Deer(NameItem.DEER, x, y));
+                    list.add(new Deer(NameItem.DEER, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.DEER, list);
                 }
 
@@ -582,7 +632,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Rabbit(NameItem.RABBIT, x, y));
+                    list.add(new Rabbit(NameItem.RABBIT, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.RABBIT, list);
                 }
 
@@ -597,7 +647,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Mouse(NameItem.MOUSE, x, y));
+                    list.add(new Mouse(NameItem.MOUSE, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.MOUSE, list);
                 }
 
@@ -612,7 +662,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Goat(NameItem.GOAT, x, y));
+                    list.add(new Goat(NameItem.GOAT, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.GOAT, list);
                 }
 
@@ -627,7 +677,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Sheep(NameItem.SHEEP, x, y));
+                    list.add(new Sheep(NameItem.SHEEP, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.SHEEP, list);
                 }
 
@@ -642,7 +692,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new WildBoar(NameItem.WILD_BOAR, x, y));
+                    list.add(new WildBoar(NameItem.WILD_BOAR, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.WILD_BOAR, list);
                 }
 
@@ -657,7 +707,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Buffalo(NameItem.BUFFALO, x, y));
+                    list.add(new Buffalo(NameItem.BUFFALO, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.BUFFALO, list);
                 }
 
@@ -672,7 +722,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Duck(NameItem.DUCK, x, y));
+                    list.add(new Duck(NameItem.DUCK, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.DUCK, list);
                 }
 
@@ -687,7 +737,7 @@ public class GeneralMap {
                     else{
                         list = new ArrayList<>();
                     }
-                    list.add(new Caterpillar(NameItem.CATERPILLAR, x, y));
+                    list.add(new Caterpillar(NameItem.CATERPILLAR, StatusAnimals.START, x, y));
                     cellMap[x][y].listAnimals.put(NameItem.CATERPILLAR, list);
                 }
 

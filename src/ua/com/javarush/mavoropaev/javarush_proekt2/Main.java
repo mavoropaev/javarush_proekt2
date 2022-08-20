@@ -6,6 +6,8 @@ public class Main {
 
     public static void main(String[] args){
         GeneralMap generalMapGod = new GeneralMap(MAP_SIZE_X, MAP_SIZE_Y);
+        GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
+        globalStatistics.initCellStatistics(MAP_SIZE_X, MAP_SIZE_Y);
         generalMapGod.start();
     }
 }

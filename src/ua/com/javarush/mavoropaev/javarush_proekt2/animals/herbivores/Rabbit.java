@@ -2,6 +2,7 @@ package ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Herbivore;
+import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 
 public class Rabbit extends Herbivore {
     public static final double WEIGHT = 2;
@@ -9,15 +10,18 @@ public class Rabbit extends Herbivore {
     public static final int MAX_SPEED = 2;
     public static final double MAX_EAT = 0.45;
 
-    public Rabbit(NameItem rabbit, int x, int y) {
-        super(rabbit, x, y);
+    public Rabbit(NameItem rabbit, StatusAnimals statusAnimals, int x, int y) {
+        super(rabbit, statusAnimals, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+        super.setCurrentWeightEat(MAX_EAT);
+        super.setStatusAnimals(statusAnimals);
+        super.setLifespan(0);
     }
 
     @Override
-    public Rabbit newObject(NameItem name, int x, int y){
-        return new Rabbit(name, x, y);
+    public Rabbit newObject(NameItem name, StatusAnimals statusAnimals, int x, int y){
+        return new Rabbit(name, statusAnimals, x, y);
     }
 
     @Override

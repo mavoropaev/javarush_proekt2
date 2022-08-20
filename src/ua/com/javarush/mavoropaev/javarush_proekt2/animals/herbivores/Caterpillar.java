@@ -2,6 +2,7 @@ package ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores;
 
 import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Herbivore;
+import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 
 public class Caterpillar extends Herbivore {
     public static final double WEIGHT = 0.01;
@@ -9,15 +10,19 @@ public class Caterpillar extends Herbivore {
     public static  final int MAX_SPEED = 0;
     public static  final double MAX_EAT = 0;
 
-    public Caterpillar(NameItem caterpillar, int x, int y) {
-        super(caterpillar, x, y);
+    public Caterpillar(NameItem caterpillar, StatusAnimals statusAnimals, int x, int y) {
+        super(caterpillar, statusAnimals, x, y);
         super.setMaxWeightEat(MAX_EAT);
         super.setWeight(WEIGHT);
+        super.setCurrentWeightEat(MAX_EAT);
+        super.setStatusAnimals(statusAnimals);
+        super.setLifespan(0);
     }
 
     @Override
-    public Caterpillar newObject(NameItem name, int x, int y){
-        return new Caterpillar(name, x, y);
+    public Caterpillar newObject(NameItem name, StatusAnimals statusAnimals, int x, int y){
+
+        return new Caterpillar(name, statusAnimals, x, y);
     }
 
     @Override

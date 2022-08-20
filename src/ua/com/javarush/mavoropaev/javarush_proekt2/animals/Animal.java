@@ -14,9 +14,16 @@ public abstract class Animal {
     private int speed;
     private double maxWeightEat;
     private double currentWeightEat;
+    private StatusAnimals statusAnimals;
+    private int lifespan;
+
+
+
     private int countCycleMove;
     private int countCycleEat;
     private int countCycleReproduction;
+    private int countCycleCheckDeath;
+
 
     public final int COUNT_DIRECTION = 4;
     public final int UP_DIR = 1;
@@ -50,13 +57,14 @@ public abstract class Animal {
         this.name = name;
     }
 
-    public Animal(NameItem name, int xMap, int yMap) {
+    public Animal(NameItem name, StatusAnimals statusAnimals, int xMap, int yMap) {
         this.name = name;
         this.xMap = xMap;
         this.yMap = yMap;
+        this.statusAnimals = statusAnimals;
     }
 
-    public abstract Animal newObject(NameItem wolf, int x, int y);
+    public abstract Animal newObject(NameItem wolf, StatusAnimals statusAnimals, int x, int y);
 
     public void setCountCycleReproduction(int countCycleReproduction) {
         this.countCycleReproduction = countCycleReproduction;
@@ -75,8 +83,9 @@ public abstract class Animal {
     public void setMaxWeightEat(double maxWeightEat) {
         this.maxWeightEat = maxWeightEat;
     }
+
     public void setCurrentWeightEat(double currentWeightEat) {
-        this.currentWeightEat = currentWeightEat;
+        this.currentWeightEat = (double) Math.round(currentWeightEat * 10000) / 10000;
     }
     public double getCurrentWeightEat() {
         return currentWeightEat;
@@ -100,6 +109,35 @@ public abstract class Animal {
     }
     public double getMaxWeightEat() {
         return maxWeightEat;
+    }
+
+
+    public void setCountCycleCheckDeath(int countCycleCheckDeath) {
+        this.countCycleCheckDeath = countCycleCheckDeath;
+    }
+
+    public int getCountCycleCheckDeath() {
+        return countCycleCheckDeath;
+    }
+
+    public StatusAnimals getStatusAnimals() {
+        return statusAnimals;
+    }
+
+    public void setStatusAnimals(StatusAnimals statusAnimals) {
+        this.statusAnimals = statusAnimals;
+    }
+
+    public void setLifespan(int lifespan) {
+        this.lifespan = lifespan;
+    }
+
+    public void addLifespan() {
+        this.lifespan += 1;
+    }
+
+    public int getLifespan() {
+        return lifespan;
     }
 
 
