@@ -6,7 +6,7 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 
 public class Eagle extends Predator {
     public static final double WEIGHT = 6;
-    public static final int MAX_COUNT_CELL = 3;//20;
+    public static final int MAX_COUNT_CELL = 20;//20;
     public static final int MAX_SPEED = 3;
     public static final double MAX_EAT = 1;
 
@@ -16,7 +16,7 @@ public class Eagle extends Predator {
         super.setWeight(WEIGHT);
         super.setCurrentWeightEat(MAX_EAT);
         super.setStatusAnimals(statusAnimals);
-        super.setLifespan(0);
+        super.setLifeSpan(0);
     }
 
     @Override

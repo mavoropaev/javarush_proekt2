@@ -24,6 +24,7 @@ public class GeneralMap {
     public Plants[][] plantsMap;
     TableEatProbability tableEatProbability;
     GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
+    CycleCounter cycleCounter  = CycleCounter.getInstance();
 
     public GeneralMap(int sizeX, int sizeY) {
         this.sizeX = sizeX;
@@ -38,14 +39,20 @@ public class GeneralMap {
         initPlantsMap();
         initAnimals();
 
-        for (int i = 0; i < 4; i++) {
-            System.out.println("step = " + (i + 1));
+        for (int i = 0; i < 5; i++) {
             newCycle();
+
+            globalStatistics.setCellStatisticsBeginCycle(this);
+
             checkDeathAnimals();
             restorePlants();
             eatAllAnimals();
             reproductionAllAnimals();
             moveAllAnimals();
+
+            globalStatistics.setCellStatisticsEndCycle(this);
+            globalStatistics.printStatistics(0, 0);
+
         }
 
 
@@ -54,11 +61,11 @@ public class GeneralMap {
 
     public void newCycle(){
         //printState();
-        countCycle++;
+        cycleCounter.increaseCycleCounter();
     }
 
-    public void printState(){
-        System.out.println("cycle = " + getCountCycle());
+    public void printState1(){
+        System.out.println("cycle = " + cycleCounter.getCycleCounter());
         System.out.println("-------------------------");
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
@@ -72,10 +79,6 @@ public class GeneralMap {
             }
         }
         System.out.println("-------------------------");
-    }
-
-    public int getCountCycle() {
-        return countCycle;
     }
 
     public void initCellMap(){
@@ -111,7 +114,7 @@ public class GeneralMap {
 
     private void checkDeathAnimals(){
         ArrayList<Animal> animalsList;
-        printState();
+        //printState();
 
         //for(int i = 0; i < 4; i++) {
           //  newCycle();
@@ -125,11 +128,12 @@ public class GeneralMap {
                         while (animalsIterator.hasNext()){
                             Animal animal = animalsIterator.next();
 
-                            if (animal.getCountCycleCheckDeath() < getCountCycle()){
+                            if (animal.getCountCycleCheckDeath() < cycleCounter.getCycleCounter()){
                                 animal.setCurrentWeightEat(animal.getCurrentWeightEat() - animal.getMaxWeightEat() * 0.25);
                                 if (animal.getCurrentWeightEat() <= 0 && animal.getMaxWeightEat() > 0){
                                     animalsIterator.remove();
                                     cellMap[x][y].removeAnimalsOnType(name);
+                                    globalStatistics.addStatisticsDeath(x, y, name);
 
                                 }
                             }
@@ -137,40 +141,39 @@ public class GeneralMap {
                     }
                 }
             }
-            printState();
+            //printState();
         //}
 
     }
 
     private void reproductionAllAnimals(){
         ArrayList<Animal> animalsList;
-        printState();
+        //printState();
 
         //for(int i = 0; i < 3; i++) {
          //   newCycle();
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
-                    System.out.println("cell (" + x + " ; " + y +")");
                     for (NameItem name : cellMap[x][y].listAnimals.keySet()){
-                        System.out.println("------------> " + name + " <-------------");
                         animalsList = cellMap[x][y].listAnimals.get(name);
                         int countAnimals = animalsList.size();
                         ArrayList<Animal> newAnimals = new ArrayList<>();
 
                         for (int iteration = 0; iteration < countAnimals; iteration++){
                             if (iteration < countAnimals - iteration - 1){
-                                if (animalsList.get(iteration).getCountCycleReproduction() < getCountCycle() &&
-                                        animalsList.get(countAnimals - iteration - 1).getCountCycleReproduction() < getCountCycle()){
+                                if (animalsList.get(iteration).getCountCycleReproduction() < cycleCounter.getCycleCounter() &&
+                                        animalsList.get(countAnimals - iteration - 1).getCountCycleReproduction() < cycleCounter.getCycleCounter()){
+
                                         Animal newAnimal = animalsList.get(iteration).newObject(name, StatusAnimals.NEWBORN, x, y);
-                                        newAnimal.setCountCycleReproduction(getCountCycle());
+                                        newAnimal.setCountCycleReproduction(cycleCounter.getCycleCounter());
                                         newAnimals.add(newAnimal);
 
-                                        animalsList.get(iteration).setCountCycleReproduction(getCountCycle());
-                                        animalsList.get(countAnimals - iteration - 1).setCountCycleReproduction(getCountCycle());
+                                        animalsList.get(iteration).setCountCycleReproduction(cycleCounter.getCycleCounter());
+                                        animalsList.get(countAnimals - iteration - 1).setCountCycleReproduction(cycleCounter.getCycleCounter());
                                 }
                             }
                             else if (iteration == countAnimals - iteration - 1) {
-                                animalsList.get(iteration).setCountCycleReproduction(getCountCycle());
+                                animalsList.get(iteration).setCountCycleReproduction(cycleCounter.getCycleCounter());
                             }
                             else{
                                 break;
@@ -183,13 +186,14 @@ public class GeneralMap {
                             if (newCellListAnimals.size() < newCellListAnimals.get(0).getMaxPopulation()) {
                                 newCellListAnimals.add(newAnimals.get(num));
                                 cellMap[x][y].addAnimalsOnType(name);
+                                globalStatistics.addStatisticsReproductions(x, y, name);
                             }
                         }
                         cellMap[x][y].listAnimals.put(name, newCellListAnimals);
                     }
                 }
             }
-            printState();
+           // printState();
         //}
 
     }
@@ -198,15 +202,13 @@ public class GeneralMap {
 
     private void eatAllAnimals(){
         ArrayList<Animal> animalsList;
-        Random random = new Random();
+        //Random random = new Random();
 
         //for(int i = 0; i < 3; i++) {
            // newCycle();
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
-                    System.out.println("cell (" + x + " ; " + y +")");
                     for (NameItem name : cellMap[x][y].listAnimals.keySet()){
-                        System.out.println(name);
                         animalsList = cellMap[x][y].listAnimals.get(name);
 
                         Iterator<Animal> animalsIterator = animalsList.iterator();
@@ -215,11 +217,15 @@ public class GeneralMap {
 
                             if (animal.getCurrentWeightEat() < animal.getMaxWeightEat()) {
                                 NameItem nameFoods = getFoods(animal, x, y);
-                                boolean boolEat = eatFoods(animal, nameFoods, x, y);
+                                if (eatFoods(animal, nameFoods, x, y)){
+                                    String str = "The " + name + " ate the " + nameFoods;
+                                    globalStatistics.addStatisticsCell(x, y, name, str);
+                                    globalStatistics.addStatisticsHaveBeenEaten(x, y, nameFoods);
+                                }
                             }
                             else{
                                 if (animal.getMaxWeightEat() > 0) {
-                                    System.out.println("CurrentWeightEat = MaxWeightEat");
+                                   // System.out.println("CurrentWeightEat = MaxWeightEat");
                                 }
                             }
                         }
@@ -287,9 +293,9 @@ public class GeneralMap {
         else{
             countAnimalsOnTypeCell = plantsMap[x][y].getCurrentBiomassWeight();
         }
-        System.out.println("animal = " + nameAnimal);
-        System.out.println("name foods = " + nameItemMaxMassFactor);
-        System.out.println("count items foods = " + countAnimalsOnTypeCell);
+       // System.out.println("animal = " + nameAnimal);
+        //System.out.println("name foods = " + nameItemMaxMassFactor);
+        //System.out.println("count items foods = " + countAnimalsOnTypeCell);
 
         return nameItemMaxMassFactor;
     }
@@ -322,16 +328,16 @@ public class GeneralMap {
 
             //System.out.println("numberAnimal = " + numberAnimal);
             //System.out.println("name = " + nameAnimal);
-            System.out.println("chanceCatchingAnimal = " + chanceCatchingAnimal);
-            System.out.println("eat...");
+            //System.out.println("chanceCatchingAnimal = " + chanceCatchingAnimal);
+            //System.out.println("eat...");
             //System.out.println("numberEat = " + numberFood);
             //System.out.println("name eat = " + tableEatProbability.getFoodToNumber(numberFood));
 
             return true;
 
         }
-        System.out.println("chanceCatchingAnimal = " + chanceCatchingAnimal);
-        System.out.println("didn't eat...");
+        //System.out.println("chanceCatchingAnimal = " + chanceCatchingAnimal);
+        //System.out.println("didn't eat...");
         return false;
     }
 
@@ -367,9 +373,7 @@ public class GeneralMap {
             //newCycle();
             for (int x = 0; x < sizeX; x++) {
                 for (int y = 0; y < sizeY; y++) {
-                    //for (NameItem name : NameItem.values()) {
                     for (NameItem name : cellMap[x][y].listAnimals.keySet()){
-                        //if (cellMap[x][y].listAnimals.containsKey(name)) {
                         animalsList = cellMap[x][y].listAnimals.get(name);
 
                         Iterator<Animal> animalsIterator = animalsList.iterator();
@@ -378,8 +382,9 @@ public class GeneralMap {
                             //step - 1 : move - animal.move()
                             //1 - вариант метод move объекта animal
                             if (animal.move(this, animal.getSpeed(), animal.getMaxPopulation())){
-                                printState();
+                                //printState();
                                 animalsIterator.remove();
+                                globalStatistics.addStatisticsLeave(x, y, name);
                             }
                             //2 - вариант метод move объекта generalMap
                             // if (animalMove(x, y, name, animal)){
@@ -395,7 +400,7 @@ public class GeneralMap {
 
     private boolean animalMove(int x, int y, NameItem name, Animal animal) {
         Random random = new Random();
-        if (animal.getCountCycleMove() < getCountCycle()) {
+        if (animal.getCountCycleMove() < cycleCounter.getCycleCounter()) {
             if (animal.getSpeed() > 0) {
                 int countStep = 0;
                 while (countStep == 0){
@@ -412,12 +417,12 @@ public class GeneralMap {
                         newYMap = sizeY - 1;
                     }
                     if (newYMap == y){
-                        animal.setCountCycleMove(getCountCycle());
+                        animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
-                        animal.setCountCycleMove(getCountCycle());
+                        animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     animal.yMap = newYMap;
@@ -431,12 +436,12 @@ public class GeneralMap {
                         newXMap = sizeX - 1;
                     }
                     if (newXMap == x){
-                        animal.setCountCycleMove(getCountCycle());
+                        animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
-                        animal.setCountCycleMove(getCountCycle());
+                        animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     animal.xMap = newXMap;
@@ -450,12 +455,12 @@ public class GeneralMap {
                         newYMap = 0;
                     }
                     if (newYMap == y){
-                        animal.setCountCycleMove(getCountCycle());
+                        animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
-                        animal.setCountCycleMove(getCountCycle());
+                        animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     animal.yMap = newYMap;
@@ -469,12 +474,12 @@ public class GeneralMap {
                         newXMap = 0;
                     }
                     if (newXMap == x){
-                        animal.setCountCycleMove(getCountCycle());
+                        animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getCountAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
-                        animal.setCountCycleMove(getCountCycle());
+                        animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     animal.xMap = newXMap;
@@ -482,7 +487,7 @@ public class GeneralMap {
                     cellMap[x][y].removeAnimalsOnType(name);
                 }
 
-                animal.setCountCycleMove(getCountCycle());
+                animal.setCountCycleMove(cycleCounter.getCycleCounter());
                 //animalsIterator.remove();
 
                 int newX = animal.xMap;
@@ -496,7 +501,7 @@ public class GeneralMap {
                 }
                 newCellListAnimals.add(animal);
                 cellMap[newX][newY].listAnimals.put(name, newCellListAnimals);
-                printState();
+                //printState();
                 return true;
             }
         }

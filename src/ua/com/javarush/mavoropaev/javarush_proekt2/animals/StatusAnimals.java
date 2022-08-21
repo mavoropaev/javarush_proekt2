@@ -4,5 +4,7 @@ public enum StatusAnimals {
     START,
     NEWBORN,
     GENERAL,
-    ARRIVED
+    ARRIVED,
+    DEATH,
+    WAS_EATEN
 }

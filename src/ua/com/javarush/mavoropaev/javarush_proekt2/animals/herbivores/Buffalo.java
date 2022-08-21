@@ -3,7 +3,6 @@ package ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores;
 import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Herbivore;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
-import ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators.Wolf;
 
 public class Buffalo extends Herbivore {
     public static final double WEIGHT = 700;
@@ -17,7 +16,7 @@ public class Buffalo extends Herbivore {
         super.setMaxWeightEat(MAX_EAT);
         super.setCurrentWeightEat(MAX_EAT);
         super.setStatusAnimals(statusAnimals);
-        super.setLifespan(0);
+        super.setLifeSpan(0);
     }
 
     @Override

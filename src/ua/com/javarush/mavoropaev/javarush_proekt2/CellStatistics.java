@@ -6,10 +6,13 @@ import java.util.HashMap;
 public class CellStatistics {
 
     public HashMap<NameItem, ArrayList<String>> listStatisticsString = new HashMap<>();
+    public HashMap<NameItem, Integer> listStatisticsBeginCycle = new HashMap<>();
     public HashMap<NameItem, Integer> listStatisticsDeath = new HashMap<>();
     public HashMap<NameItem, Integer> listStatisticsReproductions = new HashMap<>();
     public HashMap<NameItem, Integer> listStatisticsCome = new HashMap<>();
     public HashMap<NameItem, Integer> listStatisticsLeave = new HashMap<>();
+    public HashMap<NameItem, Integer> listStatisticsHaveBeenEaten = new HashMap<>();
+    public HashMap<NameItem, Integer> listStatisticsEndCycle = new HashMap<>();
 
     public CellStatistics() {
     }
@@ -31,6 +34,28 @@ public class CellStatistics {
             return listStatisticsString.get(name);
         }
         return null;
+    }
+
+    public void setStatisticsBeginCycle(NameItem name, int count){
+        listStatisticsBeginCycle.put(name, count);
+    }
+
+    public int getStatisticsBeginCycle(NameItem name){
+        if (listStatisticsBeginCycle.containsKey(name)){
+            return listStatisticsBeginCycle.get(name);
+        }
+        return 0;
+    }
+
+    public void setStatisticsEndCycle(NameItem name, int count){
+        listStatisticsEndCycle.put(name, count);
+    }
+
+    public int getStatisticsEndCycle(NameItem name){
+        if (listStatisticsEndCycle.containsKey(name)){
+            return listStatisticsEndCycle.get(name);
+        }
+        return 0;
     }
 
     public void addStatisticsDeath(NameItem name){
@@ -93,6 +118,22 @@ public class CellStatistics {
     public int getStatisticsLeave(NameItem name){
         if (listStatisticsLeave.containsKey(name)){
             return listStatisticsLeave.get(name);
+        }
+        return 0;
+    }
+
+    public void addStatisticsHaveBeenEaten(NameItem name){
+        int countLeave = 0;
+        if (listStatisticsHaveBeenEaten.containsKey(name)){
+            countLeave = listStatisticsHaveBeenEaten.get(name);
+        }
+        countLeave++;
+        listStatisticsHaveBeenEaten.put(name, countLeave);
+    }
+
+    public int getStatisticsHaveBeenEaten(NameItem name){
+        if (listStatisticsHaveBeenEaten.containsKey(name)){
+            return listStatisticsHaveBeenEaten.get(name);
         }
         return 0;
     }

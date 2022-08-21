@@ -6,7 +6,7 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 
 public class Fox extends Predator {
     public static final double WEIGHT = 8;
-    public static final int MAX_COUNT_CELL = 3;//30;
+    public static final int MAX_COUNT_CELL = 30;//30;
     public static final int MAX_SPEED = 2;
     public static final double MAX_EAT = 2;
 
@@ -16,7 +16,7 @@ public class Fox extends Predator {
         super.setWeight(WEIGHT);
         super.setCurrentWeightEat(MAX_EAT);
         super.setStatusAnimals(statusAnimals);
-        super.setLifespan(0);
+        super.setLifeSpan(0);
     }
 
     @Override

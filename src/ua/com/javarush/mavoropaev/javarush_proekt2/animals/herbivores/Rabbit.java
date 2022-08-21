@@ -6,7 +6,7 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 
 public class Rabbit extends Herbivore {
     public static final double WEIGHT = 2;
-    public static final int MAX_COUNT_CELL = 3;//150;
+    public static final int MAX_COUNT_CELL = 150;//150;
     public static final int MAX_SPEED = 2;
     public static final double MAX_EAT = 0.45;
 
@@ -16,7 +16,7 @@ public class Rabbit extends Herbivore {
         super.setWeight(WEIGHT);
         super.setCurrentWeightEat(MAX_EAT);
         super.setStatusAnimals(statusAnimals);
-        super.setLifespan(0);
+        super.setLifeSpan(0);
     }
 
     @Override
