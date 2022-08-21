@@ -115,12 +115,13 @@ public class GlobalStatistics {
     }
 
     public void printStatistics(int x, int y){
-        System.out.println("--------------------------------------------------------------------------------------------");
+        String separator = "--------------------------------------------------------------------------------------------";
+        System.out.println(separator);
         System.out.println("Cycle number : " + cycleCounter.getCycleCounter() + " : Positions : (" + x + ", " + y + ")");
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println(separator);
         String str       = "|       Name      | Start cycle | Death | Reproductions | Come | Leave | Eaten | End cycle |";
         System.out.println(str);
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println(separator);
 
         for (NameItem name : NameItem.values()) {
             int startCycle = cellStatistics[x][y].getStatisticsBeginCycle(name);
