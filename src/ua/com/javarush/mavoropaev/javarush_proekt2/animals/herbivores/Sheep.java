@@ -9,6 +9,8 @@ public class Sheep extends Herbivore {
     public static  final int MAX_COUNT_CELL = 140;//140;
     public static  final int MAX_SPEED = 3;
     public static  final double MAX_EAT = 15;
+    public static final int PERIOD_REPRODUCTIONS = 2;
+    public static final int AMOUNT_OF_CHILDREN = 1;
 
     public Sheep(NameItem sheep, StatusAnimals statusAnimals, int x, int y) {
         super(sheep, statusAnimals, x, y);
@@ -17,6 +19,8 @@ public class Sheep extends Herbivore {
         super.setCurrentWeightEat(MAX_EAT);
         super.setStatusAnimals(statusAnimals);
         super.setLifeSpan(0);
+        super.setPeriodReproductions(PERIOD_REPRODUCTIONS);
+        super.setAmountOfChildren(AMOUNT_OF_CHILDREN);
     }
 
     @Override

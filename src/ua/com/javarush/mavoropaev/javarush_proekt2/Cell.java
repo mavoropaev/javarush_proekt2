@@ -36,21 +36,21 @@ public class Cell {
         this.y = y;
     }
 
-    public void addAnimalsOnType(NameItem name){
+    public void increaseCounterAnimalsOnType(NameItem name){
         if (countAnimalsOnType.containsKey(name)){
             int count = countAnimalsOnType.get(name);
             count++;
             countAnimalsOnType.put(name, count);
         }
     }
-    public void removeAnimalsOnType(NameItem name){
+    public void decrementCounterAnimalsOnType(NameItem name){
         if (countAnimalsOnType.containsKey(name)){
             int count = countAnimalsOnType.get(name);
             count--;
             countAnimalsOnType.put(name, count);
         }
     }
-    public int getCountAnimalsOnType(NameItem name){
+    public int getCounterAnimalsOnType(NameItem name){
         if (countAnimalsOnType.containsKey(name)){
             return countAnimalsOnType.get(name);
         }

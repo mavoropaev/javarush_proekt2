@@ -1,5 +1,7 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2;
 
+import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,8 +15,10 @@ public class CellStatistics {
     public HashMap<NameItem, Integer> listStatisticsLeave = new HashMap<>();
     public HashMap<NameItem, Integer> listStatisticsHaveBeenEaten = new HashMap<>();
     public HashMap<NameItem, Integer> listStatisticsEndCycle = new HashMap<>();
+    public HashMap<NameItem, ArrayList<NameItem>> listStatisticsWhoAteWho;
 
     public CellStatistics() {
+        listStatisticsWhoAteWho = new HashMap<>();
     }
 
     public void addStatisticsCell(NameItem name, String string){
@@ -67,6 +71,11 @@ public class CellStatistics {
         listStatisticsDeath.put(name, countDeath);
     }
 
+    public void resetStatisticsDeath(NameItem name){
+        int countDeath = 0;
+        listStatisticsDeath.put(name, countDeath);
+    }
+
     public int getStatisticsDeath(NameItem name){
         if (listStatisticsDeath.containsKey(name)){
             return listStatisticsDeath.get(name);
@@ -80,6 +89,11 @@ public class CellStatistics {
             countReproductions = listStatisticsReproductions.get(name);
         }
         countReproductions++;
+        listStatisticsReproductions.put(name, countReproductions);
+    }
+
+    public void resetStatisticsReproductions(NameItem name){
+        int countReproductions = 0;
         listStatisticsReproductions.put(name, countReproductions);
     }
 
@@ -99,6 +113,11 @@ public class CellStatistics {
         listStatisticsCome.put(name, countCome);
     }
 
+    public void resetStatisticsCome(NameItem name){
+        int countCome = 0;
+        listStatisticsCome.put(name, countCome);
+    }
+
     public int getStatisticsCome(NameItem name){
         if (listStatisticsCome.containsKey(name)){
             return listStatisticsCome.get(name);
@@ -112,6 +131,11 @@ public class CellStatistics {
             countLeave = listStatisticsLeave.get(name);
         }
         countLeave++;
+        listStatisticsLeave.put(name, countLeave);
+    }
+
+    public void resetStatisticsLeave(NameItem name){
+        int countLeave = 0;
         listStatisticsLeave.put(name, countLeave);
     }
 
@@ -131,10 +155,35 @@ public class CellStatistics {
         listStatisticsHaveBeenEaten.put(name, countLeave);
     }
 
+    public void resetStatisticsHaveBeenEaten(NameItem name){
+        int countLeave = 0;
+        listStatisticsHaveBeenEaten.put(name, countLeave);
+    }
+
     public int getStatisticsHaveBeenEaten(NameItem name){
         if (listStatisticsHaveBeenEaten.containsKey(name)){
             return listStatisticsHaveBeenEaten.get(name);
         }
         return 0;
+    }
+
+    public void addStatisticsWhoAteWho(NameItem name, NameItem nameFood){
+        ArrayList<NameItem> listNameItem = new ArrayList<>();
+        if (listStatisticsWhoAteWho.containsKey(name)){
+            listNameItem = listStatisticsWhoAteWho.get(name);
+        }
+        listNameItem.add(nameFood);
+        listStatisticsWhoAteWho.put(name, listNameItem);
+    }
+
+    public void resetStatisticsWhoAteWho(){
+        listStatisticsWhoAteWho.clear();
+    }
+
+    public ArrayList<NameItem> getStatisticsWhoAteWho(NameItem name){
+        if (listStatisticsWhoAteWho.containsKey(name)){
+            return listStatisticsWhoAteWho.get(name);
+        }
+        return null;
     }
 }

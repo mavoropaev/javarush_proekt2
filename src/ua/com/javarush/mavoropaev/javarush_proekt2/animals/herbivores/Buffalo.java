@@ -9,6 +9,8 @@ public class Buffalo extends Herbivore {
     public static final int MAX_COUNT_CELL = 10;//10;
     public static final int MAX_SPEED = 3;
     public static final double MAX_EAT = 100;
+    public static final int PERIOD_REPRODUCTIONS = 2;
+    public static final int AMOUNT_OF_CHILDREN = 1;
 
     public Buffalo(NameItem buffalo, StatusAnimals statusAnimals, int x, int y) {
         super(buffalo, statusAnimals, x, y);
@@ -17,6 +19,8 @@ public class Buffalo extends Herbivore {
         super.setCurrentWeightEat(MAX_EAT);
         super.setStatusAnimals(statusAnimals);
         super.setLifeSpan(0);
+        super.setPeriodReproductions(PERIOD_REPRODUCTIONS);
+        super.setAmountOfChildren(AMOUNT_OF_CHILDREN);
     }
 
     @Override

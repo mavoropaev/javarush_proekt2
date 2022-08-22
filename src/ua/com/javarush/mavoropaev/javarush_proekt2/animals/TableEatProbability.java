@@ -36,14 +36,14 @@ public class TableEatProbability {
         if (ANIMAL_TO_NUMBER.containsKey(nameAnimal)) {
             return (ANIMAL_TO_NUMBER.get(nameAnimal));
         }
-        return 0;
+        return -1;
     }
 
     public int getNumberToFood(NameFoods nameFood){
         if (ANIMAL_TO_NUMBER.containsKey(nameFood)) {
             return (ANIMAL_TO_NUMBER.get(nameFood));
         }
-        return 0;
+        return -1;
     }
 
     public NameFoods getFoodToNumber(int numberName){

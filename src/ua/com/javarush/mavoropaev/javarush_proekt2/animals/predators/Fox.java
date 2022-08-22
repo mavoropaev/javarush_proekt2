@@ -9,6 +9,8 @@ public class Fox extends Predator {
     public static final int MAX_COUNT_CELL = 30;//30;
     public static final int MAX_SPEED = 2;
     public static final double MAX_EAT = 2;
+    public static final int PERIOD_REPRODUCTIONS = 3;
+    public static final int AMOUNT_OF_CHILDREN = 2;
 
     public Fox(NameItem fox, StatusAnimals statusAnimals, int x, int y) {
         super(fox, statusAnimals, x, y);
@@ -17,6 +19,8 @@ public class Fox extends Predator {
         super.setCurrentWeightEat(MAX_EAT);
         super.setStatusAnimals(statusAnimals);
         super.setLifeSpan(0);
+        super.setPeriodReproductions(PERIOD_REPRODUCTIONS);
+        super.setAmountOfChildren(AMOUNT_OF_CHILDREN);
     }
 
     @Override

@@ -17,6 +17,12 @@ public abstract class Animal {
     private double currentWeightEat;
     private StatusAnimals statusAnimals;
     private int lifeSpan;
+    private int periodReproductions;
+    private int amountOfChildren;
+
+
+
+
 
     private int countCycleMove;
     private int countCycleEat;
@@ -138,6 +144,22 @@ public abstract class Animal {
         return lifeSpan;
     }
 
+    public void setPeriodReproductions(int periodReproductions) {
+        this.periodReproductions = periodReproductions;
+    }
+
+    public void setAmountOfChildren(int amountOfChildren) {
+        this.amountOfChildren = amountOfChildren;
+    }
+
+    public int getPeriodReproductions() {
+        return periodReproductions;
+    }
+
+    public int getAmountOfChildren() {
+        return amountOfChildren;
+    }
+
 
    public boolean move(GeneralMap generalMap, int maxCountStep, int maxPopulation) {
         //step - 1 : move - animal.move()
@@ -164,14 +186,14 @@ public abstract class Animal {
                         return false;
                     }
 
-                    int countAnimalsOnTypeNewCell = generalMap.cellMap[xMap][newYMap].getCountAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = generalMap.cellMap[xMap][newYMap].getCounterAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
                         setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
 
-                    generalMap.cellMap[xMap][newYMap].addAnimalsOnType(name);
-                    generalMap.cellMap[xMap][yMap].removeAnimalsOnType(name);
+                    generalMap.cellMap[xMap][newYMap].increaseCounterAnimalsOnType(name);
+                    generalMap.cellMap[xMap][yMap].decrementCounterAnimalsOnType(name);
                     yMap = newYMap;
                 }
 
@@ -185,14 +207,14 @@ public abstract class Animal {
                         return false;
                     }
 
-                    int countAnimalsOnTypeNewCell = generalMap.cellMap[newXMap][yMap].getCountAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = generalMap.cellMap[newXMap][yMap].getCounterAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
                         setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
 
-                    generalMap.cellMap[newXMap][yMap].addAnimalsOnType(name);
-                    generalMap.cellMap[xMap][yMap].removeAnimalsOnType(name);
+                    generalMap.cellMap[newXMap][yMap].increaseCounterAnimalsOnType(name);
+                    generalMap.cellMap[xMap][yMap].decrementCounterAnimalsOnType(name);
                     xMap = newXMap;
                 }
 
@@ -206,14 +228,14 @@ public abstract class Animal {
                         return false;
                     }
 
-                    int countAnimalsOnTypeNewCell = generalMap.cellMap[xMap][newYMap].getCountAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = generalMap.cellMap[xMap][newYMap].getCounterAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
                         setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
 
-                    generalMap.cellMap[xMap][newYMap].addAnimalsOnType(name);
-                    generalMap.cellMap[xMap][yMap].removeAnimalsOnType(name);
+                    generalMap.cellMap[xMap][newYMap].increaseCounterAnimalsOnType(name);
+                    generalMap.cellMap[xMap][yMap].decrementCounterAnimalsOnType(name);
                     yMap = newYMap;
                 }
 
@@ -227,14 +249,14 @@ public abstract class Animal {
                         return false;
                     }
 
-                    int countAnimalsOnTypeNewCell = generalMap.cellMap[newXMap][yMap].getCountAnimalsOnType(name);
+                    int countAnimalsOnTypeNewCell = generalMap.cellMap[newXMap][yMap].getCounterAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
                         setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
 
-                    generalMap.cellMap[newXMap][yMap].addAnimalsOnType(name);
-                    generalMap.cellMap[xMap][yMap].removeAnimalsOnType(name);
+                    generalMap.cellMap[newXMap][yMap].increaseCounterAnimalsOnType(name);
+                    generalMap.cellMap[xMap][yMap].decrementCounterAnimalsOnType(name);
                     xMap = newXMap;
                 }
 

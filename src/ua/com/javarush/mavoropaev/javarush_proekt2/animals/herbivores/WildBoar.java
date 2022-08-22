@@ -9,6 +9,8 @@ public class WildBoar extends Herbivore {
     public static final int MAX_COUNT_CELL = 50;//50;
     public static final int MAX_SPEED = 2;
     public static final double MAX_EAT = 50;
+    public static final int PERIOD_REPRODUCTIONS = 2;
+    public static final int AMOUNT_OF_CHILDREN = 2;
 
     public WildBoar(NameItem wildBoar, StatusAnimals statusAnimals, int x, int y) {
         super(wildBoar, statusAnimals, x, y);
@@ -17,6 +19,8 @@ public class WildBoar extends Herbivore {
         super.setCurrentWeightEat(MAX_EAT);
         super.setStatusAnimals(statusAnimals);
         super.setLifeSpan(0);
+        super.setPeriodReproductions(PERIOD_REPRODUCTIONS);
+        super.setAmountOfChildren(AMOUNT_OF_CHILDREN);
     }
 
     @Override
