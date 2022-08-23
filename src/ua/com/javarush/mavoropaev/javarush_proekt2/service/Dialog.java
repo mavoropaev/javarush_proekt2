@@ -63,6 +63,8 @@ public class Dialog {
         while (true) {
             Scanner scanner = new Scanner(System.in);
             try {
+                System.out.println("Enter cell coordinates to display statistics");
+                System.out.print(" - Next cell X: -> ");
                 System.out.print(" - Next cell X: -> ");
                 int cellX = scanner.nextInt();
                 System.out.print(" - Next cell Y -> ");
