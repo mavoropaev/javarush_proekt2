@@ -1,6 +1,6 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Predator;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 
@@ -9,8 +9,8 @@ public class Wolf extends Predator {
     public static final int MAX_COUNT_CELL = 30;//30;
     public static final int MAX_SPEED = 3;
     public static final double MAX_EAT = 8;
-    public static final int PERIOD_REPRODUCTIONS = 3;
-    public static final int AMOUNT_OF_CHILDREN = 2;
+    public static final int PERIOD_REPRODUCTIONS = 2;
+    public static final int AMOUNT_OF_CHILDREN = 1;
 
 
     public Wolf(NameItem wolf, StatusAnimals statusAnimals, int x, int y) {

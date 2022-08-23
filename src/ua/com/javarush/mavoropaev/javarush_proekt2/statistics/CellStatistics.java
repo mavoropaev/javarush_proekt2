@@ -1,6 +1,6 @@
-package ua.com.javarush.mavoropaev.javarush_proekt2;
+package ua.com.javarush.mavoropaev.javarush_proekt2.statistics;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;

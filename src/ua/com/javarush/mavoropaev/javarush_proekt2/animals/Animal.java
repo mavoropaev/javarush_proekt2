@@ -1,9 +1,9 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.CycleCounter;
-import ua.com.javarush.mavoropaev.javarush_proekt2.GeneralMap;
-import ua.com.javarush.mavoropaev.javarush_proekt2.GlobalStatistics;
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.CycleCounter;
+import ua.com.javarush.mavoropaev.javarush_proekt2.map.GeneralMap;
+import ua.com.javarush.mavoropaev.javarush_proekt2.statistics.GlobalStatistics;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,10 +20,6 @@ public abstract class Animal {
     private int periodReproductions;
     private int amountOfChildren;
 
-
-
-
-
     private int countCycleMove;
     private int countCycleEat;
     private int countCycleReproduction;
@@ -39,6 +35,13 @@ public abstract class Animal {
 
     GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
     CycleCounter cycleCounter  = CycleCounter.getInstance();
+
+    public Animal(NameItem name, StatusAnimals statusAnimals, int xMap, int yMap) {
+        this.name = name;
+        this.xMap = xMap;
+        this.yMap = yMap;
+        this.statusAnimals = statusAnimals;
+    }
 
     public abstract void eat();
     public abstract void reproduction();
@@ -65,12 +68,7 @@ public abstract class Animal {
         return countCycleMove;
     }
 
-    public Animal(NameItem name, StatusAnimals statusAnimals, int xMap, int yMap) {
-        this.name = name;
-        this.xMap = xMap;
-        this.yMap = yMap;
-        this.statusAnimals = statusAnimals;
-    }
+
 
     public abstract Animal newObject(NameItem wolf, StatusAnimals statusAnimals, int x, int y);
 
@@ -279,5 +277,4 @@ public abstract class Animal {
         }
         return false;
     }
-
 }

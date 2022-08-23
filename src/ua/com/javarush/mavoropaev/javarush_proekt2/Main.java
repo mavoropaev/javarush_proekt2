@@ -1,14 +1,24 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2;
 
+import ua.com.javarush.mavoropaev.javarush_proekt2.map.GeneralMap;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.Dialog;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.Parameters;
+import ua.com.javarush.mavoropaev.javarush_proekt2.statistics.GlobalStatistics;
+
 public class Main {
 
-    private static final int MAP_SIZE_X = 1;
-    private static final int MAP_SIZE_Y = 1;
-
     public static void main(String[] args){
-        GeneralMap generalMapGod = new GeneralMap(MAP_SIZE_X, MAP_SIZE_Y);
+        Parameters parameters = Parameters.getInstance();
+        Dialog dialog = Dialog.getInstance();
+
+        dialog.startDialog();
+
+        int mapSizeX = parameters.getMapSizeX();
+        int mapSizeY = parameters.getMapSizeY();
+
+        GeneralMap generalMapGod = new GeneralMap(mapSizeX, mapSizeY);
         GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
-        globalStatistics.initCellStatistics(MAP_SIZE_X, MAP_SIZE_Y);
+        globalStatistics.initCellStatistics(mapSizeX, mapSizeY);
         generalMapGod.start();
     }
 }

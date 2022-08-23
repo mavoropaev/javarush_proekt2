@@ -1,6 +1,6 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Herbivore;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 
@@ -9,7 +9,7 @@ public class Goat extends Herbivore {
     public static final int MAX_COUNT_CELL = 140;//140;
     public static final int MAX_SPEED = 3;
     public static final double MAX_EAT = 10;
-    public static final int PERIOD_REPRODUCTIONS = 2;
+    public static final int PERIOD_REPRODUCTIONS = 1;
     public static final int AMOUNT_OF_CHILDREN = 1;
 
     public Goat(NameItem goat, StatusAnimals statusAnimals, int x, int y) {

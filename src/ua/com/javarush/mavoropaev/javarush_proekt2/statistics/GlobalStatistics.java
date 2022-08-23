@@ -1,19 +1,20 @@
-package ua.com.javarush.mavoropaev.javarush_proekt2;
+package ua.com.javarush.mavoropaev.javarush_proekt2.statistics;
 
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
+import ua.com.javarush.mavoropaev.javarush_proekt2.map.GeneralMap;
+import ua.com.javarush.mavoropaev.javarush_proekt2.plants.Plants;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.CycleCounter;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 public class GlobalStatistics {
     private int sizeX;
     private int sizeY;
     CycleCounter cycleCounter  = CycleCounter.getInstance();
-    private static volatile GlobalStatistics instance;
 
+    private static volatile GlobalStatistics instance;
     public static GlobalStatistics getInstance() {
         GlobalStatistics localInstance = instance;
         if (localInstance == null) {

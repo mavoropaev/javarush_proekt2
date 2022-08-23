@@ -1,4 +1,4 @@
-package ua.com.javarush.mavoropaev.javarush_proekt2;
+package ua.com.javarush.mavoropaev.javarush_proekt2.service;
 
 public enum NameItem {
     WOLF,

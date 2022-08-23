@@ -1,8 +1,7 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.GeneralMap;
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
-import ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators.Wolf;
+import ua.com.javarush.mavoropaev.javarush_proekt2.map.GeneralMap;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 
 public class Herbivore extends Animal {
     public Herbivore(NameItem herbivore, StatusAnimals statusAnimals, int x, int y) {

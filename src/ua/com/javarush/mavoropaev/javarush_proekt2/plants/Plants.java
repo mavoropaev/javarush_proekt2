@@ -1,4 +1,6 @@
-package ua.com.javarush.mavoropaev.javarush_proekt2;
+package ua.com.javarush.mavoropaev.javarush_proekt2.plants;
+
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 
 public class Plants {
     private NameItem name;
@@ -6,7 +8,7 @@ public class Plants {
     private int yMap;
     //private final double MAX_BIOMASS_WEIGHT = 200;
     public static final double WEIGHT = 1;
-    public static final int MAX_COUNT_CELL = 200;
+    public static final int MAX_COUNT_CELL = 400;
     public static final int MAX_SPEED = 0;
     public static final double MAX_EAT = 0;
 

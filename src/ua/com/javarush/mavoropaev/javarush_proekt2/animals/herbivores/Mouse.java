@@ -1,6 +1,6 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Herbivore;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 
@@ -9,8 +9,8 @@ public class Mouse extends Herbivore {
     public static final int MAX_COUNT_CELL = 500;//500;
     public static final int MAX_SPEED = 1;
     public static final double MAX_EAT = 0.01;
-    public static final int PERIOD_REPRODUCTIONS = 2;
-    public static final int AMOUNT_OF_CHILDREN = 3;
+    public static final int PERIOD_REPRODUCTIONS = 5;
+    public static final int AMOUNT_OF_CHILDREN = 1;
 
     public Mouse(NameItem mouse, StatusAnimals statusAnimals, int x, int y) {
         super(mouse, statusAnimals, x, y);

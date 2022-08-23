@@ -1,7 +1,7 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.GeneralMap;
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.map.GeneralMap;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 
 public class Predator extends Animal {
     public Predator(NameItem predator, StatusAnimals statusAnimals, int x, int y) {

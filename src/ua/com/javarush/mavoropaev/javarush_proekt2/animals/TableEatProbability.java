@@ -1,7 +1,7 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameFoods;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameFoods;
 
 import java.util.HashMap;
 

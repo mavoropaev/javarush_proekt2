@@ -1,10 +1,16 @@
-package ua.com.javarush.mavoropaev.javarush_proekt2;
+package ua.com.javarush.mavoropaev.javarush_proekt2.map;
 
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.CycleCounter;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameFoods;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.TableEatProbability;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores.*;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.predators.*;
+import ua.com.javarush.mavoropaev.javarush_proekt2.plants.Plants;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.Parameters;
+import ua.com.javarush.mavoropaev.javarush_proekt2.statistics.GlobalStatistics;
 
 import java.util.*;
 
@@ -24,6 +30,7 @@ public class GeneralMap {
     TableEatProbability tableEatProbability;
     GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
     CycleCounter cycleCounter  = CycleCounter.getInstance();
+    Parameters parameters = Parameters.getInstance();
 
     public GeneralMap(int sizeX, int sizeY) {
         this.sizeX = sizeX;
@@ -38,7 +45,7 @@ public class GeneralMap {
         initPlantsMap();
         initAnimals();
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < parameters.getCountCycle(); i++) {
             newCycle();
             restorePlants();
 
@@ -50,12 +57,19 @@ public class GeneralMap {
             moveAllAnimals();
 
             globalStatistics.setCellStatisticsEndCycle(this);
-            globalStatistics.printStatistics(0, 0);
-
+            //globalStatistics.printStatistics(1, 1);
+            for (Integer x : parameters.getKeySet()){
+                for (Integer y : parameters.getKeyValue(x)){
+                    globalStatistics.printStatistics(x, y);
+                }
+            }
+            /*
             System.out.println("Next cycle? :");
             Scanner console = new Scanner(System.in);
             String yesNo = console.nextLine();
             if (yesNo.equals("N") || yesNo.equals("n")) break;
+
+             */
 
         }
     }

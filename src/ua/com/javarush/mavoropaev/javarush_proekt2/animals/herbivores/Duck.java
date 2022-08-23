@@ -1,6 +1,6 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals.herbivores;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Herbivore;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.StatusAnimals;
 
@@ -10,7 +10,7 @@ public class Duck extends Herbivore {
     public static final int MAX_SPEED = 4;
     public static final double MAX_EAT = 0.15;
     public static final int PERIOD_REPRODUCTIONS = 2;
-    public static final int AMOUNT_OF_CHILDREN = 3;
+    public static final int AMOUNT_OF_CHILDREN = 1;
 
     public Duck(NameItem duck, StatusAnimals statusAnimals, int x, int y) {
         super(duck, statusAnimals, x, y);
