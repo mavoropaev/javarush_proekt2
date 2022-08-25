@@ -14,6 +14,8 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.statistics.GlobalStatistics;
 
 import java.util.*;
 
+import static java.lang.Thread.sleep;
+
 public class GeneralMap {
     private int sizeX;
     private int sizeY;
@@ -32,11 +34,81 @@ public class GeneralMap {
     CycleCounter cycleCounter  = CycleCounter.getInstance();
     Parameters parameters = Parameters.getInstance();
 
-    public GeneralMap(int sizeX, int sizeY) {
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
+    private static volatile GeneralMap instance;
+    public static GeneralMap getInstance(){
+        GeneralMap localInstance = instance;
+        if (localInstance == null){
+            synchronized (GeneralMap.class){
+                localInstance = instance;
+                if (localInstance == null){
+                    instance = localInstance = new GeneralMap();
+                }
+            }
+        }
+        return localInstance;
+    }
+
+    public GeneralMap() {
+        this.sizeX = parameters.getMapSizeX();
+        this.sizeY = parameters.getMapSizeY();
         cellMap = new Cell[sizeX][sizeY];
         plantsMap = new Plants[sizeX][sizeY];
+    }
+
+    public volatile List<Thread> threadList = new ArrayList<>(parameters.ITEM_COUNT);
+
+    public class itemThread implements Runnable{
+        private NameItem nameItem;
+
+        public itemThread(NameItem nameItem){
+            this.nameItem = nameItem;
+        }
+
+        @Override
+        public void run() {
+
+            for (int i = 0; i < parameters.getCountCycle(); i++) {
+                while (i >= cycleCounter.getCycleCounter()){
+                    try {
+                        sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                restorePlants();
+                checkDeathAnimals(nameItem);
+                eatAllAnimals();
+                reproductionAllAnimals();
+                moveAllAnimals();
+
+            }
+        }
+    }
+
+    public class StatisticsThread implements Runnable{
+
+        public StatisticsThread(){
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i < parameters.getCountCycle(); i++) {
+                synchronized (GlobalStatistics.class) {
+                    newCycle();
+                    globalStatistics.setCellStatisticsBeginCycle();
+                }
+
+                synchronized (GlobalStatistics.class) {
+                    globalStatistics.setCellStatisticsEndCycle();
+                    for (Integer x : parameters.getKeySet()) {
+                        for (Integer y : parameters.getKeyValue(x)) {
+                            globalStatistics.printStatistics(x, y);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void start(){
@@ -45,33 +117,15 @@ public class GeneralMap {
         initPlantsMap();
         initAnimals();
 
-        for (int i = 0; i < parameters.getCountCycle(); i++) {
-            newCycle();
-            restorePlants();
+        Thread statisticsThread = new Thread(new StatisticsThread());
+        statisticsThread.start();
 
-            globalStatistics.setCellStatisticsBeginCycle(this);
-
-            checkDeathAnimals();
-            eatAllAnimals();
-            reproductionAllAnimals();
-            moveAllAnimals();
-
-            globalStatistics.setCellStatisticsEndCycle(this);
-            //globalStatistics.printStatistics(1, 1);
-            for (Integer x : parameters.getKeySet()){
-                for (Integer y : parameters.getKeyValue(x)){
-                    globalStatistics.printStatistics(x, y);
-                }
-            }
-            /*
-            System.out.println("Next cycle? :");
-            Scanner console = new Scanner(System.in);
-            String yesNo = console.nextLine();
-            if (yesNo.equals("N") || yesNo.equals("n")) break;
-
-             */
-
+        for (NameItem name : NameItem.values()) {
+            Thread itemThread = new Thread(new itemThread(name));
+            threadList.add(itemThread);
+            itemThread.start();
         }
+
     }
 
     public void newCycle(){
@@ -108,32 +162,33 @@ public class GeneralMap {
         return sizeY;
     }
 
-    private void checkDeathAnimals(){
+    private void checkDeathAnimals(NameItem name){
         ArrayList<Animal> animalsList;
 
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+                //for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+                    if (cellMap[x][y].listAnimals.containsKey(name)) {
+                        animalsList = cellMap[x][y].listAnimals.get(name);
 
-                    animalsList = cellMap[x][y].listAnimals.get(name);
+                        Iterator<Animal> animalsIterator = animalsList.iterator();
+                        while (animalsIterator.hasNext()) {
+                            Animal animal = animalsIterator.next();
 
-                    Iterator<Animal> animalsIterator = animalsList.iterator();
-                    while (animalsIterator.hasNext()){
-                        Animal animal = animalsIterator.next();
+                            if (animal.getCountCycleCheckDeath() < cycleCounter.getCycleCounter()) {
+                                //checkStatistics1(x, y, name, animal);
+                                animal.setCurrentWeightEat(animal.getCurrentWeightEat() - animal.getMaxWeightEat() * 0.25);
+                                //checkStatistics2(name, animal);
+                                if (animal.getCurrentWeightEat() <= 0 && animal.getMaxWeightEat() > 0) {
+                                    animalsIterator.remove();
+                                    cellMap[x][y].decrementCounterAnimalsOnType(name);
+                                    globalStatistics.addStatisticsDeath(x, y, name);
 
-                        if (animal.getCountCycleCheckDeath() < cycleCounter.getCycleCounter()){
-                            //checkStatistics1(x, y, name, animal);
-                            animal.setCurrentWeightEat(animal.getCurrentWeightEat() - animal.getMaxWeightEat() * 0.25);
-                            //checkStatistics2(name, animal);
-                            if (animal.getCurrentWeightEat() <= 0 && animal.getMaxWeightEat() > 0){
-                                animalsIterator.remove();
-                                cellMap[x][y].decrementCounterAnimalsOnType(name);
-                                globalStatistics.addStatisticsDeath(x, y, name);
-
+                                }
                             }
                         }
                     }
-                }
+                //}
             }
         }
 
@@ -368,7 +423,7 @@ public class GeneralMap {
                     while (animalsIterator.hasNext()){
                         Animal animal = animalsIterator.next();
                         //1 - вариант метод move объекта animal
-                        if (animal.move(this, animal.getSpeed(), animal.getMaxPopulation())){
+                        if (animal.move(animal.getSpeed(), animal.getMaxPopulation())){
                             //printState();
                             animalsIterator.remove();
                             globalStatistics.addStatisticsLeave(x, y, name);

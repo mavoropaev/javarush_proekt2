@@ -19,7 +19,8 @@ public class Dialog {
     }
     private Dialog(){
     }
-     Parameters parameters = Parameters.getInstance();
+
+    Parameters parameters = Parameters.getInstance();
 
     public void startDialog(){
         choiceMainMenu();
@@ -33,12 +34,9 @@ public class Dialog {
             Scanner scanner = new Scanner(System.in);
             try {
                 System.out.print(" - Island size - length: -> ");
-                int length = scanner.nextInt();
+                parameters.setMapSizeX(scanner.nextInt());
                 System.out.print(" - Island size - width: -> ");
-                int width = scanner.nextInt();
-
-                parameters.setMapSizeX(length);
-                parameters.setMapSizeY(width);
+                parameters.setMapSizeY(scanner.nextInt());
                 break;
             } catch (InputMismatchException ex) {
                 System.out.println("Input error! Data entered incorrectly!");
@@ -50,9 +48,7 @@ public class Dialog {
             Scanner scanner = new Scanner(System.in);
             try {
                 System.out.print(" - Count cycle : -> ");
-                int count = scanner.nextInt();
-
-                parameters.setCountCycle(count);
+                parameters.setCountCycle(scanner.nextInt());
                 break;
             } catch (InputMismatchException ex) {
                 System.out.println("Input error! Data entered incorrectly!");
@@ -85,8 +81,6 @@ public class Dialog {
                 System.out.println("Retype.");
             }
         }
-
-
     }
 
     public boolean checkCellXY(int x, int y){
@@ -95,6 +89,4 @@ public class Dialog {
         }
         return true;
     }
-
-
 }

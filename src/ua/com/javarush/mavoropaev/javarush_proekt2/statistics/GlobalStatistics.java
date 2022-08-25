@@ -4,6 +4,7 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.map.GeneralMap;
 import ua.com.javarush.mavoropaev.javarush_proekt2.plants.Plants;
 import ua.com.javarush.mavoropaev.javarush_proekt2.service.CycleCounter;
 import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.Parameters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ public class GlobalStatistics {
     private int sizeX;
     private int sizeY;
     CycleCounter cycleCounter  = CycleCounter.getInstance();
+    Parameters parameters = Parameters.getInstance();
 
     private static volatile GlobalStatistics instance;
     public static GlobalStatistics getInstance() {
@@ -27,21 +29,25 @@ public class GlobalStatistics {
         return localInstance;
     }
     private GlobalStatistics(){
-
+        initCellStatistics();
     }
 
     public CellStatistics[][] cellStatistics;
 
-    public void initCellStatistics(int sizeX, int sizeY){
-        cellStatistics = new CellStatistics[sizeX][sizeY];
-        for (int x = 0; x < sizeX; x++){
-            for (int y = 0; y < sizeY; y++){
+    public void initCellStatistics(){
+        int mapSizeX = parameters.getMapSizeX();
+        int mapSizeY = parameters.getMapSizeY();
+        cellStatistics = new CellStatistics[mapSizeX][mapSizeY];
+
+        for (int x = 0; x < mapSizeX; x++){
+            for (int y = 0; y < mapSizeY; y++){
                 cellStatistics[x][y] = new CellStatistics();
             }
         }
     }
 
-    public void setCellStatisticsBeginCycle(GeneralMap generalMap){
+    public void setCellStatisticsBeginCycle(){
+        GeneralMap generalMap = GeneralMap.getInstance();
         for (int x = 0; x < cellStatistics.length; x++){
             for (int y = 0; y < cellStatistics[0].length; y++){
                 for (NameItem name : generalMap.cellMap[x][y].listAnimals.keySet()) {
@@ -60,7 +66,8 @@ public class GlobalStatistics {
         }
     }
 
-    public void setCellStatisticsEndCycle(GeneralMap generalMap){
+    public void setCellStatisticsEndCycle(){
+        GeneralMap generalMap = GeneralMap.getInstance();
         for (int x = 0; x < cellStatistics.length; x++){
             for (int y = 0; y < cellStatistics[0].length; y++){
                 for (NameItem name : generalMap.cellMap[x][y].listAnimals.keySet()) {

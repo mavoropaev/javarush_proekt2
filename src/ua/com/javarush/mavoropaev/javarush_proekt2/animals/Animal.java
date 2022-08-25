@@ -159,9 +159,10 @@ public abstract class Animal {
     }
 
 
-   public boolean move(GeneralMap generalMap, int maxCountStep, int maxPopulation) {
-       GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
-       CycleCounter cycleCounter  = CycleCounter.getInstance();
+   public boolean move(int maxCountStep, int maxPopulation) {
+        GeneralMap generalMap = GeneralMap.getInstance();
+        GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
+        CycleCounter cycleCounter  = CycleCounter.getInstance();
         //step - 1 : move - animal.move()
         if (getCountCycleMove() < cycleCounter.getCycleCounter()) {
             Random random = new Random();

@@ -20,8 +20,8 @@ public class Herbivore extends Animal {
     }
 
     @Override
-    public boolean move(GeneralMap generalMap, int countStep, int maxPopulation) {
-        return super.move(generalMap, countStep, maxPopulation);
+    public boolean move(int countStep, int maxPopulation) {
+        return super.move(countStep, maxPopulation);
     }
 
     @Override
