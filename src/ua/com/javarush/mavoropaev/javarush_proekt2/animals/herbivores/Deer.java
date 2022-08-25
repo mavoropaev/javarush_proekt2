@@ -14,13 +14,13 @@ public class Deer extends Herbivore {
 
     public Deer(NameItem deer, StatusAnimals statusAnimals, int x, int y) {
         super(deer, statusAnimals, x, y);
-        super.setMaxWeightEat(MAX_EAT);
-        super.setWeight(WEIGHT);
-        super.setCurrentWeightEat(MAX_EAT);
-        super.setStatusAnimals(statusAnimals);
-        super.setLifeSpan(0);
-        super.setPeriodReproductions(PERIOD_REPRODUCTIONS);
-        super.setAmountOfChildren(AMOUNT_OF_CHILDREN);
+        setMaxWeightEat(MAX_EAT);
+        setWeight(WEIGHT);
+        setCurrentWeightEat(MAX_EAT);
+        setStatusAnimals(statusAnimals);
+        setLifeSpan(0);
+        setPeriodReproductions(PERIOD_REPRODUCTIONS);
+        setAmountOfChildren(AMOUNT_OF_CHILDREN);
     }
 
     @Override

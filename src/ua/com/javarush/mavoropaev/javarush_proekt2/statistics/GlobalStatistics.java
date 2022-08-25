@@ -1,6 +1,5 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.statistics;
 
-
 import ua.com.javarush.mavoropaev.javarush_proekt2.map.GeneralMap;
 import ua.com.javarush.mavoropaev.javarush_proekt2.plants.Plants;
 import ua.com.javarush.mavoropaev.javarush_proekt2.service.CycleCounter;
@@ -129,16 +128,10 @@ public class GlobalStatistics {
         return cellStatistics[x][y].getStatisticsWhoAteWho(name);
     }
 
-
-
-
-
     public void getStatisticsAnimals(){
-
     }
 
     public void getStatisticsStep(){
-
     }
 
     public void printStatistics(int x, int y){
@@ -187,7 +180,6 @@ public class GlobalStatistics {
                 }
             }
 
-
             String strCycle = "| " + strName + " | " + strStartCycle + " | " + strDeath + " | " + strReproductions +
                              " | " + strCome + " | " + strLeave + " | " + strEaten + " | " + strEndCycle + " | ";
             strCycle = strCycle + strWhoAteWho;
@@ -195,6 +187,5 @@ public class GlobalStatistics {
 
         }
     }
-
 
 }

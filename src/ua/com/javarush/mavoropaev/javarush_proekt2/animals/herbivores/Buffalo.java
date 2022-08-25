@@ -14,13 +14,13 @@ public class Buffalo extends Herbivore {
 
     public Buffalo(NameItem buffalo, StatusAnimals statusAnimals, int x, int y) {
         super(buffalo, statusAnimals, x, y);
-        super.setWeight(WEIGHT);
-        super.setMaxWeightEat(MAX_EAT);
-        super.setCurrentWeightEat(MAX_EAT);
-        super.setStatusAnimals(statusAnimals);
-        super.setLifeSpan(0);
-        super.setPeriodReproductions(PERIOD_REPRODUCTIONS);
-        super.setAmountOfChildren(AMOUNT_OF_CHILDREN);
+        setWeight(WEIGHT);
+        setMaxWeightEat(MAX_EAT);
+        setCurrentWeightEat(MAX_EAT);
+        setStatusAnimals(statusAnimals);
+        setLifeSpan(0);
+        setPeriodReproductions(PERIOD_REPRODUCTIONS);
+        setAmountOfChildren(AMOUNT_OF_CHILDREN);
     }
 
     @Override

@@ -33,8 +33,8 @@ public abstract class Animal {
     public int xMap;
     public int yMap;
 
-    GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
-    CycleCounter cycleCounter  = CycleCounter.getInstance();
+    //GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
+    //CycleCounter cycleCounter  = CycleCounter.getInstance();
 
     public Animal(NameItem name, StatusAnimals statusAnimals, int xMap, int yMap) {
         this.name = name;
@@ -160,10 +160,11 @@ public abstract class Animal {
 
 
    public boolean move(GeneralMap generalMap, int maxCountStep, int maxPopulation) {
+       GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
+       CycleCounter cycleCounter  = CycleCounter.getInstance();
         //step - 1 : move - animal.move()
-        Random random = new Random();
-
         if (getCountCycleMove() < cycleCounter.getCycleCounter()) {
+            Random random = new Random();
             if (maxCountStep > 0) {
                 int countStep = 0;
                 while (countStep == 0){

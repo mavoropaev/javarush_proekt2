@@ -114,6 +114,7 @@ public class GeneralMap {
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+
                     animalsList = cellMap[x][y].listAnimals.get(name);
 
                     Iterator<Animal> animalsIterator = animalsList.iterator();
@@ -208,6 +209,7 @@ public class GeneralMap {
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+
                     animalsList = cellMap[x][y].listAnimals.get(name);
 
                     for (Animal animal : animalsList) {
@@ -353,14 +355,13 @@ public class GeneralMap {
         return false;
     }
 
-
-
     private void moveAllAnimals() {
         ArrayList<Animal> animalsList;
 
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+
                     animalsList = cellMap[x][y].listAnimals.get(name);
 
                     Iterator<Animal> animalsIterator = animalsList.iterator();
