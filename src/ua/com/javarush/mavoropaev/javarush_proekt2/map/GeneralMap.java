@@ -57,20 +57,11 @@ public class GeneralMap {
             moveAllAnimals();
 
             globalStatistics.setCellStatisticsEndCycle(this);
-            //globalStatistics.printStatistics(1, 1);
             for (Integer x : parameters.getKeySet()){
                 for (Integer y : parameters.getKeyValue(x)){
                     globalStatistics.printStatistics(x, y);
                 }
             }
-            /*
-            System.out.println("Next cycle? :");
-            Scanner console = new Scanner(System.in);
-            String yesNo = console.nextLine();
-            if (yesNo.equals("N") || yesNo.equals("n")) break;
-
-             */
-
         }
     }
 
