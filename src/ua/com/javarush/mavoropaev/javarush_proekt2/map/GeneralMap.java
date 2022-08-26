@@ -31,16 +31,17 @@ public class GeneralMap {
     public Plants[][] plantsMap;
     TableEatProbability tableEatProbability;
     GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
-    CycleCounter cycleCounter  = CycleCounter.getInstance();
+    CycleCounter cycleCounter = CycleCounter.getInstance();
     Parameters parameters = Parameters.getInstance();
 
     private static volatile GeneralMap instance;
-    public static GeneralMap getInstance(){
+
+    public static GeneralMap getInstance() {
         GeneralMap localInstance = instance;
-        if (localInstance == null){
-            synchronized (GeneralMap.class){
+        if (localInstance == null) {
+            synchronized (GeneralMap.class) {
                 localInstance = instance;
-                if (localInstance == null){
+                if (localInstance == null) {
                     instance = localInstance = new GeneralMap();
                 }
             }
@@ -57,10 +58,10 @@ public class GeneralMap {
 
     public volatile List<Thread> threadList = new ArrayList<>(parameters.ITEM_COUNT);
 
-    public class itemThread implements Runnable{
+    public class itemThread implements Runnable {
         private NameItem nameItem;
 
-        public itemThread(NameItem nameItem){
+        public itemThread(NameItem nameItem) {
             this.nameItem = nameItem;
         }
 
@@ -68,7 +69,7 @@ public class GeneralMap {
         public void run() {
 
             for (int i = 0; i < parameters.getCountCycle(); i++) {
-                while (i >= cycleCounter.getCycleCounter()){
+                while (i >= cycleCounter.getCycleCounter()) {
                     try {
                         sleep(100);
                     } catch (InterruptedException e) {
@@ -86,9 +87,9 @@ public class GeneralMap {
         }
     }
 
-    public class StatisticsThread implements Runnable{
+    public class StatisticsThread implements Runnable {
 
-        public StatisticsThread(){
+        public StatisticsThread() {
         }
 
         @Override
@@ -111,11 +112,12 @@ public class GeneralMap {
         }
     }
 
-    public void start(){
+    public void start() {
         tableEatProbability = new TableEatProbability();
         initCellMap();
         initPlantsMap();
-        initAnimals();
+        //initAnimals();
+        initAnimalsClass();
 
         Thread statisticsThread = new Thread(new StatisticsThread());
         statisticsThread.start();
@@ -128,28 +130,30 @@ public class GeneralMap {
 
     }
 
-    public void newCycle(){
+    public void newCycle() {
         cycleCounter.increaseCycleCounter();
     }
 
-    public void initCellMap(){
-        for (int x = 0; x < sizeX; x++){
-            for (int y = 0; y < sizeY; y++){
+    public void initCellMap() {
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
                 cellMap[x][y] = new Cell(x, y);
             }
         }
     }
-    public void initPlantsMap(){
-        for (int x = 0; x < sizeX; x++){
-            for (int y = 0; y < sizeY; y++){
+
+    public void initPlantsMap() {
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
                 plantsMap[x][y] = new Plants(NameItem.PLANTS, x, y);
                 plantsMap[x][y].setInitBiomassWeight();
             }
         }
     }
-    public void restorePlants(){
-        for (int x = 0; x < sizeX; x++){
-            for (int y = 0; y < sizeY; y++){
+
+    public void restorePlants() {
+        for (int x = 0; x < sizeX; x++) {
+            for (int y = 0; y < sizeY; y++) {
                 plantsMap[x][y].setInitBiomassWeight();
             }
         }
@@ -158,36 +162,37 @@ public class GeneralMap {
     public int getSizeX() {
         return sizeX;
     }
+
     public int getSizeY() {
         return sizeY;
     }
 
-    private void checkDeathAnimals(NameItem name){
+    private void checkDeathAnimals(NameItem name) {
         ArrayList<Animal> animalsList;
 
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
                 //for (NameItem name : cellMap[x][y].listAnimals.keySet()){
-                    if (cellMap[x][y].listAnimals.containsKey(name)) {
-                        animalsList = cellMap[x][y].listAnimals.get(name);
+                if (cellMap[x][y].listAnimals.containsKey(name)) {
+                    animalsList = cellMap[x][y].listAnimals.get(name);
 
-                        Iterator<Animal> animalsIterator = animalsList.iterator();
-                        while (animalsIterator.hasNext()) {
-                            Animal animal = animalsIterator.next();
+                    Iterator<Animal> animalsIterator = animalsList.iterator();
+                    while (animalsIterator.hasNext()) {
+                        Animal animal = animalsIterator.next();
 
-                            if (animal.getCountCycleCheckDeath() < cycleCounter.getCycleCounter()) {
-                                //checkStatistics1(x, y, name, animal);
-                                animal.setCurrentWeightEat(animal.getCurrentWeightEat() - animal.getMaxWeightEat() * 0.25);
-                                //checkStatistics2(name, animal);
-                                if (animal.getCurrentWeightEat() <= 0 && animal.getMaxWeightEat() > 0) {
-                                    animalsIterator.remove();
-                                    cellMap[x][y].decrementCounterAnimalsOnType(name);
-                                    globalStatistics.addStatisticsDeath(x, y, name);
+                        if (animal.getCountCycleCheckDeath() < cycleCounter.getCycleCounter()) {
+                            //checkStatistics1(x, y, name, animal);
+                            animal.setCurrentWeightEat(animal.getCurrentWeightEat() - animal.getMaxWeightEat() * 0.25);
+                            //checkStatistics2(name, animal);
+                            if (animal.getCurrentWeightEat() <= 0 && animal.getMaxWeightEat() > 0) {
+                                animalsIterator.remove();
+                                cellMap[x][y].decrementCounterAnimalsOnType(name);
+                                globalStatistics.addStatisticsDeath(x, y, name);
 
-                                }
                             }
                         }
                     }
+                }
                 //}
             }
         }
@@ -203,27 +208,27 @@ public class GeneralMap {
 
     private void checkStatistics1(int x, int y, NameItem name, Animal animal) {
         if (name == NameItem.BUFFALO) {
-            System.out.println(x +" : " + y +" -------------------------------------------------------");
+            System.out.println(x + " : " + y + " -------------------------------------------------------");
             System.out.println("animal.getCurrentWeightEatStartCycle() = " + animal.getCurrentWeightEat());
             System.out.println("animal.getMaxWeightEat() * 0.25 = " + animal.getMaxWeightEat() * 0.25);
         }
     }
 
-    private void reproductionAllAnimals(){
+    private void reproductionAllAnimals() {
         ArrayList<Animal> animalsList;
 
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+                for (NameItem name : cellMap[x][y].listAnimals.keySet()) {
 
                     animalsList = cellMap[x][y].listAnimals.get(name);
                     int countAnimals = animalsList.size();
                     ArrayList<Animal> newAnimals = new ArrayList<>();
 
-                    for (int iteration = 0; iteration < countAnimals; iteration++){
-                        if (iteration < countAnimals - iteration - 1){
+                    for (int iteration = 0; iteration < countAnimals; iteration++) {
+                        if (iteration < countAnimals - iteration - 1) {
                             if (cycleCounter.getCycleCounter() - animalsList.get(iteration).getCountCycleReproduction() > animalsList.get(iteration).getPeriodReproductions() &&
-                                    cycleCounter.getCycleCounter() - animalsList.get(countAnimals - iteration - 1).getCountCycleReproduction() > animalsList.get(countAnimals - iteration - 1).getPeriodReproductions() ){
+                                    cycleCounter.getCycleCounter() - animalsList.get(countAnimals - iteration - 1).getCountCycleReproduction() > animalsList.get(countAnimals - iteration - 1).getPeriodReproductions()) {
 
                                 for (int count = 0; count < animalsList.get(iteration).getAmountOfChildren(); count++) {
                                     Animal newAnimal = animalsList.get(iteration).newObject(name, StatusAnimals.NEWBORN, x, y);
@@ -234,11 +239,9 @@ public class GeneralMap {
                                 animalsList.get(iteration).setCountCycleReproduction(cycleCounter.getCycleCounter());
                                 animalsList.get(countAnimals - iteration - 1).setCountCycleReproduction(cycleCounter.getCycleCounter());
                             }
-                        }
-                        else if (iteration == countAnimals - iteration - 1) {
+                        } else if (iteration == countAnimals - iteration - 1) {
                             //animalsList.get(iteration).setCountCycleReproduction(cycleCounter.getCycleCounter());
-                        }
-                        else{
+                        } else {
                             break;
                         }
                     }
@@ -258,12 +261,12 @@ public class GeneralMap {
         }
     }
 
-    private void eatAllAnimals(){
+    private void eatAllAnimals() {
         ArrayList<Animal> animalsList;
 
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+                for (NameItem name : cellMap[x][y].listAnimals.keySet()) {
 
                     animalsList = cellMap[x][y].listAnimals.get(name);
 
@@ -278,8 +281,7 @@ public class GeneralMap {
                                 globalStatistics.addStatisticsCell(x, y, name, str);
                                 globalStatistics.addStatisticsHaveBeenEaten(x, y, nameFoods);
 
-                            }
-                            else{
+                            } else {
                                 //System.out.println("Animal = " + animal.toString() + " ---> " + nameFoods + " : Cancel");
                             }
                         }
@@ -289,7 +291,7 @@ public class GeneralMap {
         }
     }
 
-    private NameItem getFoods(Animal animal, int x, int y){
+    private NameItem getFoods(Animal animal, int x, int y) {
         HashMap<NameItem, ArrayList<Animal>> listAllFoods = new HashMap<>();
         HashMap<NameItem, Double> listMassFactor = new HashMap<>();
         NameItem nameAnimal = animal.getName();
@@ -304,7 +306,7 @@ public class GeneralMap {
         for (int numFood = 0; numFood < COUNT_TYPE_FOODS; numFood++) {
             probabilityEat = tableEatProbability.getProbability(numberAnimal, numFood);
             nameItemFood = tableEatProbability.getAnimalToNumber(numFood);
-            if (probabilityEat > 0){
+            if (probabilityEat > 0) {
                 if (nameItemFood != NameItem.PLANTS) {
                     countAnimalsOnTypeCell = cellMap[x][y].getCounterAnimalsOnType(nameItemFood);
 
@@ -313,10 +315,9 @@ public class GeneralMap {
                         massFactor = countAnimalsOnTypeCell * probabilityEat * weightAnimal;
                         listMassFactor.put(nameItemFood, massFactor);
                     }
-                }
-                else{
+                } else {
                     double countPlantsCell = plantsMap[x][y].getCurrentBiomassWeight();
-                    if (countPlantsCell > 0){
+                    if (countPlantsCell > 0) {
                         double weightPlants = Plants.WEIGHT;
                         massFactor = countPlantsCell * probabilityEat * weightPlants;
                         listMassFactor.put(nameItemFood, massFactor);
@@ -328,10 +329,10 @@ public class GeneralMap {
 
         double maxMassFactor = 0;
         NameItem nameItemMaxMassFactor = null;
-        for (Map.Entry<NameItem, Double> pair : listMassFactor.entrySet()){
+        for (Map.Entry<NameItem, Double> pair : listMassFactor.entrySet()) {
             NameItem key = pair.getKey();
             Double value = pair.getValue();
-            if (value > maxMassFactor){
+            if (value > maxMassFactor) {
                 maxMassFactor = value;
                 nameItemMaxMassFactor = key;
             }
@@ -340,12 +341,12 @@ public class GeneralMap {
     }
 
     //вариант случайного выбора еды
-    private NameItem getFoodsRandom(NameItem nameAnimal, int x, int y){
+    private NameItem getFoodsRandom(NameItem nameAnimal, int x, int y) {
         ArrayList<NameItem> listFood = new ArrayList<>();
         Random random = new Random();
         int numberAnimal = tableEatProbability.getNumberToAnimal(nameAnimal);
 
-        for (NameItem name : NameItem.values()){
+        for (NameItem name : NameItem.values()) {
             int numberFood = tableEatProbability.getNumberToAnimal(name);
             int probabilityEat = tableEatProbability.getProbability(numberAnimal, numberFood);
             if (probabilityEat > 0) {
@@ -356,17 +357,16 @@ public class GeneralMap {
                             listFood.add(name);
                         }
                     }
-                }
-                else{
-                    if (plantsMap[x][y].getCurrentBiomassWeight() > 0){
+                } else {
+                    if (plantsMap[x][y].getCurrentBiomassWeight() > 0) {
                         listFood.add(name);
                     }
                 }
             }
         }
-        if (listFood.size() > 0){
+        if (listFood.size() > 0) {
             int numberFood = 0;
-            while (numberFood == 0){
+            while (numberFood == 0) {
                 numberFood = random.nextInt(listFood.size() + 1);
             }
             return listFood.get(numberFood - 1);
@@ -374,7 +374,7 @@ public class GeneralMap {
         return null;
     }
 
-    private boolean eatFoods(Animal animal, NameItem nameFood, int x, int y){
+    private boolean eatFoods(Animal animal, NameItem nameFood, int x, int y) {
         Random random = new Random();
         NameItem nameAnimal = animal.getName();
         int numberAnimal = tableEatProbability.getNumberToAnimal(nameAnimal);
@@ -382,10 +382,10 @@ public class GeneralMap {
         int probabilityEat = tableEatProbability.getProbability(numberAnimal, numberFood);
 
         int chanceCatchingAnimal = 0;
-        while (chanceCatchingAnimal == 0){
+        while (chanceCatchingAnimal == 0) {
             chanceCatchingAnimal = random.nextInt(100);
         }
-        if (chanceCatchingAnimal <= probabilityEat){
+        if (chanceCatchingAnimal <= probabilityEat) {
             //едим!!!!
             if (nameFood != NameItem.PLANTS) {
                 double weightEat = cellMap[x][y].listAnimals.get(nameFood).get(0).getWeight();
@@ -396,8 +396,7 @@ public class GeneralMap {
                 cellMap[x][y].listAnimals.get(nameFood).remove(0);
                 animal.addCurrentWeightEat(weightEat);
 
-            }
-            else{
+            } else {
                 double weightPlants = plantsMap[x][y].getWeight();
                 plantsMap[x][y].subtractPlants();
                 animal.addCurrentWeightEat(weightPlants);
@@ -415,15 +414,15 @@ public class GeneralMap {
 
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                for (NameItem name : cellMap[x][y].listAnimals.keySet()){
+                for (NameItem name : cellMap[x][y].listAnimals.keySet()) {
 
                     animalsList = cellMap[x][y].listAnimals.get(name);
 
                     Iterator<Animal> animalsIterator = animalsList.iterator();
-                    while (animalsIterator.hasNext()){
+                    while (animalsIterator.hasNext()) {
                         Animal animal = animalsIterator.next();
                         //1 - вариант метод move объекта animal
-                        if (animal.move(animal.getSpeed(), animal.getMaxPopulation())){
+                        if (animal.move(animal.getSpeed(), animal.getMaxPopulation())) {
                             //printState();
                             animalsIterator.remove();
                             globalStatistics.addStatisticsLeave(x, y, name);
@@ -443,7 +442,7 @@ public class GeneralMap {
         if (animal.getCountCycleMove() < cycleCounter.getCycleCounter()) {
             if (animal.getSpeed() > 0) {
                 int countStep = 0;
-                while (countStep == 0){
+                while (countStep == 0) {
                     countStep = random.nextInt(animal.getSpeed() + 1);
                 }
                 int direction = 0;
@@ -456,12 +455,12 @@ public class GeneralMap {
                     if (newYMap >= sizeY) {
                         newYMap = sizeY - 1;
                     }
-                    if (newYMap == y){
+                    if (newYMap == y) {
                         animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getCounterAnimalsOnType(name);
-                    if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
+                    if (countAnimalsOnTypeNewCell + 1 > animal.getMaxPopulation()) {
                         animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
@@ -475,12 +474,12 @@ public class GeneralMap {
                     if (newXMap >= sizeX) {
                         newXMap = sizeX - 1;
                     }
-                    if (newXMap == x){
+                    if (newXMap == x) {
                         animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getCounterAnimalsOnType(name);
-                    if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
+                    if (countAnimalsOnTypeNewCell + 1 > animal.getMaxPopulation()) {
                         animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
@@ -494,12 +493,12 @@ public class GeneralMap {
                     if (newYMap < 0) {
                         newYMap = 0;
                     }
-                    if (newYMap == y){
+                    if (newYMap == y) {
                         animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     int countAnimalsOnTypeNewCell = cellMap[x][newYMap].getCounterAnimalsOnType(name);
-                    if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
+                    if (countAnimalsOnTypeNewCell + 1 > animal.getMaxPopulation()) {
                         animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
@@ -508,17 +507,17 @@ public class GeneralMap {
                     cellMap[x][y].decrementCounterAnimalsOnType(name);
                 }
 
-                if (direction == LEFT_DIR){
+                if (direction == LEFT_DIR) {
                     int newXMap = animal.xMap - countStep;
                     if (newXMap < 0) {
                         newXMap = 0;
                     }
-                    if (newXMap == x){
+                    if (newXMap == x) {
                         animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
                     int countAnimalsOnTypeNewCell = cellMap[newXMap][y].getCounterAnimalsOnType(name);
-                    if (countAnimalsOnTypeNewCell+1 > animal.getMaxPopulation()){
+                    if (countAnimalsOnTypeNewCell + 1 > animal.getMaxPopulation()) {
                         animal.setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
@@ -535,8 +534,7 @@ public class GeneralMap {
                 ArrayList<Animal> newCellListAnimals;
                 if (cellMap[newX][newY].listAnimals.containsKey(name)) {
                     newCellListAnimals = cellMap[newX][newY].listAnimals.get(name);
-                }
-                else{
+                } else {
                     newCellListAnimals = new ArrayList<>();
                 }
                 newCellListAnimals.add(animal);
@@ -547,11 +545,97 @@ public class GeneralMap {
         return false;
     }
 
+    //WOLF
+    public void initAnimalsClass() {
+        Random random = new Random();
+        for (NameItem nameItem : NameItem.values()) {
+            ArrayList<Animal> list = new ArrayList<>();
+            int count = random.nextInt(getMaxPopulationCell(nameItem) + 1);
+            for (int x = 0; x < sizeX; x++) {
+                for (int y = 0; y < sizeY; y++) {
+                    cellMap[x][y].countAnimalsOnType.put(nameItem, count);
+                    for (int i = 0; i < count; i++) {
+                        list.add(new Wolf(nameItem, StatusAnimals.START, x, y));
+                        switch (nameItem) {
+                            case BUFFALO -> {
+                                list.add(new Buffalo(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case FOX -> {
+                                list.add(new Fox(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case BEAR -> {
+                                list.add(new Bear(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case DEER -> {
+                                list.add(new Deer(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case DUCK -> {
+                                list.add(new Duck(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case GOAT -> {
+                                list.add(new Goat(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case WOLF -> {
+                                list.add(new Wolf(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case EAGLE -> {
+                                list.add(new Eagle(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case HORSE -> {
+                                list.add(new Horse(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case MOUSE -> {
+                                list.add(new Mouse(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case SHEEP -> {
+                                list.add(new Sheep(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case RABBIT -> {
+                                list.add(new Rabbit(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case WILD_BOAR -> {
+                                list.add(new WildBoar(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case CATERPILLAR -> {
+                                list.add(new Caterpillar(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case BOA_CONSTRICTOR -> {
+                                list.add(new BoaConstrictor(nameItem, StatusAnimals.START, x, y));
+                            }
+                        }
+                    }
+                    cellMap[x][y].listAnimals.put(nameItem, list);
+                }
+            }
+        }
+    }
+
+    private int getMaxPopulationCell(NameItem nameItem){
+        switch (nameItem){
+            case BUFFALO -> {return Buffalo.MAX_COUNT_CELL;}
+            case FOX -> {return Fox.MAX_COUNT_CELL;}
+            case BEAR -> {return Bear.MAX_COUNT_CELL;}
+            case DEER -> {return Deer.MAX_COUNT_CELL;}
+            case DUCK -> {return Duck.MAX_COUNT_CELL;}
+            case GOAT -> {return Goat.MAX_COUNT_CELL;}
+            case WOLF -> {return Wolf.MAX_COUNT_CELL;}
+            case EAGLE -> {return Eagle.MAX_COUNT_CELL;}
+            case HORSE -> {return Horse.MAX_COUNT_CELL;}
+            case MOUSE -> {return Mouse.MAX_COUNT_CELL;}
+            case SHEEP -> {return Sheep.MAX_COUNT_CELL;}
+            case RABBIT -> {return Rabbit.MAX_COUNT_CELL;}
+            case WILD_BOAR -> {return WildBoar.MAX_COUNT_CELL;}
+            case CATERPILLAR -> {return Caterpillar.MAX_COUNT_CELL;}
+            case BOA_CONSTRICTOR -> {return BoaConstrictor.MAX_COUNT_CELL;}
+        }
+        return 0;
+    }
+
     public void initAnimals(){
         for (int x = 0; x < sizeX; x++){
             for (int y = 0; y < sizeY; y++){
                 //for(NameAnimals name : NameAnimals.values()){
-                 //возможно потом через рефлексию
+                //возможно потом через рефлексию
                 //}
                 //пока вручную
 
