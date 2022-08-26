@@ -492,247 +492,6 @@ public class GeneralMap {
         return false;
     }
 
-    public void initAnimals(){
-        for (int x = 0; x < sizeX; x++){
-            for (int y = 0; y < sizeY; y++){
-                //for(NameAnimals name : NameAnimals.values()){
-                 //возможно потом через рефлексию
-                //}
-                //пока вручную
-
-                Random random = new Random();
-                ArrayList<Animal> list;
-
-                //WOLF
-                int count = random.nextInt(Wolf.MAX_COUNT_CELL + 1);
-
-                cellMap[x][y].countAnimalsOnType.put(NameItem.WOLF, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.WOLF)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.WOLF);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Wolf(NameItem.WOLF, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.WOLF, list);
-                }
-
-                //BOA_CONSTRICTOR
-                count = random.nextInt(BoaConstrictor.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.BOA_CONSTRICTOR, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.BOA_CONSTRICTOR)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.BOA_CONSTRICTOR);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new BoaConstrictor(NameItem.BOA_CONSTRICTOR, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.BOA_CONSTRICTOR, list);
-                }
-
-                //FOX
-                count = random.nextInt(Fox.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.FOX, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.FOX)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.FOX);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Fox(NameItem.FOX, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.FOX, list);
-                }
-
-                //BEAR
-                count = random.nextInt(Bear.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.BEAR, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.BEAR)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.BEAR);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Bear(NameItem.BEAR, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.BEAR, list);
-                }
-
-                //EAGLE
-                count = random.nextInt(Eagle.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.EAGLE, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.EAGLE)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.EAGLE);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Eagle(NameItem.EAGLE, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.EAGLE, list);
-                }
-
-                //HORSE
-                count = random.nextInt(Horse.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.HORSE, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.HORSE)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.HORSE);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Horse(NameItem.HORSE, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.HORSE, list);
-                }
-
-                //DEER
-                count = random.nextInt(Deer.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.DEER, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.DEER)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.DEER);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Deer(NameItem.DEER, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.DEER, list);
-                }
-
-                //RABBIT
-                count = random.nextInt(Rabbit.MAX_COUNT_CELL) + 1;
-
-                cellMap[x][y].countAnimalsOnType.put(NameItem.RABBIT, count);
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.RABBIT)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.RABBIT);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Rabbit(NameItem.RABBIT, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.RABBIT, list);
-                }
-
-                //MOUSE
-                count = random.nextInt(Mouse.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.MOUSE, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.MOUSE)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.MOUSE);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Mouse(NameItem.MOUSE, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.MOUSE, list);
-                }
-
-                //GOAT
-                count = random.nextInt(Goat.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.GOAT, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.GOAT)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.GOAT);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Goat(NameItem.GOAT, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.GOAT, list);
-                }
-
-                //SHEEP
-                count = random.nextInt(Sheep.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.SHEEP, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.SHEEP)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.SHEEP);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Sheep(NameItem.SHEEP, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.SHEEP, list);
-                }
-
-                //WILD_BOAR
-                count = random.nextInt(WildBoar.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.WILD_BOAR, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.WILD_BOAR)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.WILD_BOAR);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new WildBoar(NameItem.WILD_BOAR, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.WILD_BOAR, list);
-                }
-
-                //BUFFALO
-                count = random.nextInt(Buffalo.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.BUFFALO, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.BUFFALO)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.BUFFALO);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Buffalo(NameItem.BUFFALO, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.BUFFALO, list);
-                }
-
-                //DUCK
-                count = random.nextInt(Duck.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.DUCK, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.DUCK)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.DUCK);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Duck(NameItem.DUCK, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.DUCK, list);
-                }
-
-                //CATERPILLAR
-                count = random.nextInt(Caterpillar.MAX_COUNT_CELL + 1);
-                cellMap[x][y].countAnimalsOnType.put(NameItem.CATERPILLAR, count);
-
-                for (int i = 0; i < count; i++){
-                    if (cellMap[x][y].listAnimals.containsKey(NameItem.CATERPILLAR)) {
-                        list = cellMap[x][y].listAnimals.get(NameItem.CATERPILLAR);
-                    }
-                    else{
-                        list = new ArrayList<>();
-                    }
-                    list.add(new Caterpillar(NameItem.CATERPILLAR, StatusAnimals.START, x, y));
-                    cellMap[x][y].listAnimals.put(NameItem.CATERPILLAR, list);
-                }
-
-            }
-        }
-    }
-
     public void printState(){
         System.out.println("cycle = " + cycleCounter.getCycleCounter());
         System.out.println("-------------------------");
@@ -748,6 +507,92 @@ public class GeneralMap {
             }
         }
         System.out.println("-------------------------");
+    }
+
+    public void initAnimals() {
+        Random random = new Random();
+        for (NameItem nameItem : NameItem.values()) {
+            if (nameItem.equals(NameItem.PLANTS)) continue;
+
+            for (int x = 0; x < sizeX; x++) {
+                for (int y = 0; y < sizeY; y++) {
+                    int count = random.nextInt(getMaxPopulationCell(nameItem) + 1);
+                    cellMap[x][y].countAnimalsOnType.put(nameItem, count);
+                    ArrayList<Animal> list = new ArrayList<>();
+                    for (int i = 0; i < count; i++) {
+                        switch (nameItem) {
+                            case BUFFALO -> {
+                                list.add(new Buffalo(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case FOX -> {
+                                list.add(new Fox(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case BEAR -> {
+                                list.add(new Bear(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case DEER -> {
+                                list.add(new Deer(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case DUCK -> {
+                                list.add(new Duck(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case GOAT -> {
+                                list.add(new Goat(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case WOLF -> {
+                                list.add(new Wolf(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case EAGLE -> {
+                                list.add(new Eagle(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case HORSE -> {
+                                list.add(new Horse(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case MOUSE -> {
+                                list.add(new Mouse(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case SHEEP -> {
+                                list.add(new Sheep(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case RABBIT -> {
+                                list.add(new Rabbit(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case WILD_BOAR -> {
+                                list.add(new WildBoar(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case CATERPILLAR -> {
+                                list.add(new Caterpillar(nameItem, StatusAnimals.START, x, y));
+                            }
+                            case BOA_CONSTRICTOR -> {
+                                list.add(new BoaConstrictor(nameItem, StatusAnimals.START, x, y));
+                            }
+                        }
+                    }
+                    cellMap[x][y].listAnimals.put(nameItem, list);
+                }
+            }
+        }
+    }
+
+    private int getMaxPopulationCell(NameItem nameItem){
+        switch (nameItem){
+            case BUFFALO -> {return Buffalo.MAX_COUNT_CELL;}
+            case FOX -> {return Fox.MAX_COUNT_CELL;}
+            case BEAR -> {return Bear.MAX_COUNT_CELL;}
+            case DEER -> {return Deer.MAX_COUNT_CELL;}
+            case DUCK -> {return Duck.MAX_COUNT_CELL;}
+            case GOAT -> {return Goat.MAX_COUNT_CELL;}
+            case WOLF -> {return Wolf.MAX_COUNT_CELL;}
+            case EAGLE -> {return Eagle.MAX_COUNT_CELL;}
+            case HORSE -> {return Horse.MAX_COUNT_CELL;}
+            case MOUSE -> {return Mouse.MAX_COUNT_CELL;}
+            case SHEEP -> {return Sheep.MAX_COUNT_CELL;}
+            case RABBIT -> {return Rabbit.MAX_COUNT_CELL;}
+            case WILD_BOAR -> {return WildBoar.MAX_COUNT_CELL;}
+            case CATERPILLAR -> {return Caterpillar.MAX_COUNT_CELL;}
+            case BOA_CONSTRICTOR -> {return BoaConstrictor.MAX_COUNT_CELL;}
+        }
+        return 0;
     }
 
 
