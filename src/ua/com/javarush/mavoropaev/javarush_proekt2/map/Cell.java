@@ -12,7 +12,7 @@ public class Cell {
     private int x;
     private int y;
 
-    public HashMap<NameItem, ArrayList<Animal>> listAnimals = new HashMap<>();
+    public HashMap<NameItem, CopyOnWriteArrayList<Animal>> listAnimals = new HashMap<>();
    // public static final List<Integer> LIST = new CopyOnWriteArrayList<>()
     public HashMap<NameItem, Integer> countAnimalsOnType = new HashMap<>();
 

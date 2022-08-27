@@ -4,6 +4,7 @@ public class CycleCounter {
     private static volatile CycleCounter instance;
     private int cycleCounter = 0;
     private int semaphore = 0;
+    private int counter = 0;
 
 
     public static CycleCounter getInstance() {
@@ -31,28 +32,55 @@ public class CycleCounter {
         cycleCounter++;
     }
 
-    public void setSemaphore(int semaphore) {
-        this.semaphore = semaphore;
-    }
-
-    public int getSemaphore() {
-        return semaphore;
-    }
-
     public void reduceSemaphore(){
-        this.semaphore--;
+        this.counter--;
     }
 
-    public void setSemaphoreOn(){
-        if (this.semaphore == 0) {
-            this.semaphore = Parameters.ITEM_COUNT;
+    public void setSemaphoreOn(int counter){
+        if (this.counter == 0) {
+            this.counter = counter;
         }
     }
 
-    public boolean isSemaphoreOff(){
-        if (this.semaphore == 0) return true;
+    private boolean semaphoreOne;
+    private boolean semaphoreTwo;
+
+    public void setSemaphoreOne(boolean semaphoreOne) {
+        this.semaphoreOne = semaphoreOne;
+    }
+
+    public void setSemaphoreTwo(boolean semaphoreTwo) {
+        this.semaphoreTwo = semaphoreTwo;
+    }
+
+    public boolean semaphoreOne(){
+        if (this.counter == 0 && semaphoreTwo){
+            semaphoreOne = true;
+            semaphoreTwo = false;
+            this.counter = Parameters.ITEM_COUNT;
+            return true;
+        }
         return false;
     }
+    public boolean semaphoreTwo(){
+        if (this.counter == 0 && semaphoreOne){
+            semaphoreTwo = true;
+            semaphoreOne = false;
+            this.counter = Parameters.ITEM_COUNT;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isSemaphoreOne() {
+        return semaphoreOne;
+    }
+
+    public boolean isSemaphoreTwo() {
+        return semaphoreTwo;
+    }
+
+
 
 
 

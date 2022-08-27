@@ -6,7 +6,9 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.statistics.GlobalStatistics;
 import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class Animal {
     private NameItem name;
@@ -30,8 +32,26 @@ public abstract class Animal {
     public final int RIGHT_DIR = 2;
     public final int DOWN_DIR = 3;
     public final int LEFT_DIR = 4;
-    public int xMap;
-    public int yMap;
+    private int xMap;
+    private int yMap;
+
+    public void setxMap(int xMap) {
+        this.xMap = xMap;
+    }
+
+    public void setyMap(int yMap) {
+        this.yMap = yMap;
+    }
+
+    public int getxMap() {
+        return xMap;
+    }
+
+    public int getyMap() {
+        return yMap;
+    }
+
+
 
     //GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
     //CycleCounter cycleCounter  = CycleCounter.getInstance();
@@ -160,121 +180,98 @@ public abstract class Animal {
 
 
    public boolean move(int maxCountStep, int maxPopulation) {
-        GeneralMap generalMap = GeneralMap.getInstance();
-        GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
-        CycleCounter cycleCounter  = CycleCounter.getInstance();
-        //step - 1 : move - animal.move()
-        if (getCountCycleMove() < cycleCounter.getCycleCounter()) {
-            Random random = new Random();
-            if (maxCountStep > 0) {
-                int countStep = 0;
-                while (countStep == 0){
-                    countStep = random.nextInt(maxCountStep + 1);
-                }
-                int direction = 0;
-                while (direction == 0) {
-                    direction = random.nextInt(COUNT_DIRECTION + 1);
-                }
+        synchronized (this.getClass()) {
+            GeneralMap generalMap = GeneralMap.getInstance();
+            GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
+            CycleCounter cycleCounter = CycleCounter.getInstance();
+            //step - 1 : move - animal.move()
+            if (getCountCycleMove() < cycleCounter.getCycleCounter()) {
+                Random random = new Random();
+                int newXMap = 0;
+                int newYMap = 0;
 
-                if (direction == UP_DIR) {
-                    int newYMap = yMap + countStep;
-                    if (newYMap >= generalMap.getSizeY()) {
-                        newYMap = generalMap.getSizeY() - 1;
+                if (maxCountStep > 0) {
+                    int countStep = 0;
+                    while (countStep == 0) {
+                        countStep = random.nextInt(maxCountStep + 1);
                     }
-                    if (newYMap == yMap) {
-                        setCountCycleMove(cycleCounter.getCycleCounter());
-                        return false;
+                    int direction = 0;
+                    while (direction == 0) {
+                        direction = random.nextInt(COUNT_DIRECTION + 1);
                     }
 
-                    int countAnimalsOnTypeNewCell = generalMap.cellMap[xMap][newYMap].getCounterAnimalsOnType(name);
+                    if (direction == UP_DIR) {
+                        newYMap = yMap + countStep;
+                        if (newYMap >= generalMap.getSizeY()) {
+                            newYMap = generalMap.getSizeY() - 1;
+                        }
+                        if (newYMap == yMap) {
+                            setCountCycleMove(cycleCounter.getCycleCounter());
+                            return false;
+                        }
+                        newXMap = xMap;
+                    }
+
+                    if (direction == RIGHT_DIR) {
+                        newXMap = xMap + countStep;
+                        if (newXMap >= generalMap.getSizeX()) {
+                            newXMap = generalMap.getSizeX() - 1;
+                        }
+                        if (newXMap == xMap) {
+                            setCountCycleMove(cycleCounter.getCycleCounter());
+                            return false;
+                        }
+                        newYMap = yMap;
+                    }
+
+                    if (direction == DOWN_DIR) {
+                        newYMap = yMap - countStep;
+                        if (newYMap < 0) {
+                            newYMap = 0;
+                        }
+                        if (newYMap == yMap) {
+                            setCountCycleMove(cycleCounter.getCycleCounter());
+                            return false;
+                        }
+                        newXMap = xMap;
+                    }
+
+                    if (direction == LEFT_DIR) {
+                        newXMap = xMap - countStep;
+                        if (newXMap < 0) {
+                            newXMap = 0;
+                        }
+                        if (newXMap == xMap) {
+                            setCountCycleMove(cycleCounter.getCycleCounter());
+                            return false;
+                        }
+                        newYMap = yMap;
+                    }
+
+                    int countAnimalsOnTypeNewCell = generalMap.cellMap[newXMap][newYMap].getCounterAnimalsOnType(name);
                     if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
                         setCountCycleMove(cycleCounter.getCycleCounter());
                         return false;
                     }
-
-                    generalMap.cellMap[xMap][newYMap].increaseCounterAnimalsOnType(name);
+                    generalMap.cellMap[newXMap][newYMap].increaseCounterAnimalsOnType(name);
                     generalMap.cellMap[xMap][yMap].decrementCounterAnimalsOnType(name);
-                    yMap = newYMap;
-                }
 
-                if (direction == RIGHT_DIR) {
-                    int newXMap = xMap + countStep;
-                    if (newXMap >= generalMap.getSizeX()) {
-                        newXMap = generalMap.getSizeX() - 1;
-                    }
-                    if (newXMap == xMap) {
-                        setCountCycleMove(cycleCounter.getCycleCounter());
-                        return false;
-                    }
+                    setCountCycleMove(cycleCounter.getCycleCounter());
 
-                    int countAnimalsOnTypeNewCell = generalMap.cellMap[newXMap][yMap].getCounterAnimalsOnType(name);
-                    if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
-                        setCountCycleMove(cycleCounter.getCycleCounter());
-                        return false;
+                    CopyOnWriteArrayList<Animal> newCellListAnimals;
+                    if (generalMap.cellMap[newXMap][newYMap].listAnimals.containsKey(name)) {
+                        newCellListAnimals = generalMap.cellMap[newXMap][newYMap].listAnimals.get(name);
+                    } else {
+                        newCellListAnimals = new CopyOnWriteArrayList<>();
                     }
-
-                    generalMap.cellMap[newXMap][yMap].increaseCounterAnimalsOnType(name);
-                    generalMap.cellMap[xMap][yMap].decrementCounterAnimalsOnType(name);
+                    newCellListAnimals.add(this);
+                    generalMap.cellMap[newXMap][newYMap].listAnimals.put(name, newCellListAnimals);
+                    globalStatistics.addStatisticsCome(newXMap, newYMap, name);
                     xMap = newXMap;
-                }
-
-                if (direction == DOWN_DIR) {
-                    int newYMap = yMap - countStep;
-                    if (newYMap < 0) {
-                        newYMap = 0;
-                    }
-                    if (newYMap == yMap) {
-                        setCountCycleMove(cycleCounter.getCycleCounter());
-                        return false;
-                    }
-
-                    int countAnimalsOnTypeNewCell = generalMap.cellMap[xMap][newYMap].getCounterAnimalsOnType(name);
-                    if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
-                        setCountCycleMove(cycleCounter.getCycleCounter());
-                        return false;
-                    }
-
-                    generalMap.cellMap[xMap][newYMap].increaseCounterAnimalsOnType(name);
-                    generalMap.cellMap[xMap][yMap].decrementCounterAnimalsOnType(name);
                     yMap = newYMap;
+
+                    return true;
                 }
-
-                if (direction == LEFT_DIR) {
-                    int newXMap = xMap - countStep;
-                    if (newXMap < 0) {
-                        newXMap = 0;
-                    }
-                    if (newXMap == xMap) {
-                        setCountCycleMove(cycleCounter.getCycleCounter());
-                        return false;
-                    }
-
-                    int countAnimalsOnTypeNewCell = generalMap.cellMap[newXMap][yMap].getCounterAnimalsOnType(name);
-                    if (countAnimalsOnTypeNewCell + 1 > maxPopulation) {
-                        setCountCycleMove(cycleCounter.getCycleCounter());
-                        return false;
-                    }
-
-                    generalMap.cellMap[newXMap][yMap].increaseCounterAnimalsOnType(name);
-                    generalMap.cellMap[xMap][yMap].decrementCounterAnimalsOnType(name);
-                    xMap = newXMap;
-                }
-
-                setCountCycleMove(cycleCounter.getCycleCounter());
-
-                int newX = xMap;
-                int newY = yMap;
-                ArrayList<Animal> newCellListAnimals;
-                if (generalMap.cellMap[newX][newY].listAnimals.containsKey(name)) {
-                    newCellListAnimals = generalMap.cellMap[newX][newY].listAnimals.get(name);
-                } else {
-                    newCellListAnimals = new ArrayList<>();
-                }
-                newCellListAnimals.add(this);
-                generalMap.cellMap[newX][newY].listAnimals.put(name, newCellListAnimals);
-                globalStatistics.addStatisticsCome(newX, newY, name);
-
-                return true;
             }
         }
         return false;
