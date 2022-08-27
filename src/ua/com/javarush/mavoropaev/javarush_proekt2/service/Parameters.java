@@ -3,7 +3,7 @@ package ua.com.javarush.mavoropaev.javarush_proekt2.service;
 import java.util.*;
 
 public class Parameters {
-    public final int ITEM_COUNT = 16;
+    public static final int ITEM_COUNT = 16;
     private int mapSizeX;
     private int mapSizeY;
     private int countCycle;

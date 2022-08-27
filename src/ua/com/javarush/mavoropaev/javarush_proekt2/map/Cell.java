@@ -5,12 +5,15 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Cell {
     private int x;
     private int y;
 
     public HashMap<NameItem, ArrayList<Animal>> listAnimals = new HashMap<>();
+   // public static final List<Integer> LIST = new CopyOnWriteArrayList<>()
     public HashMap<NameItem, Integer> countAnimalsOnType = new HashMap<>();
 
     public Cell() {
