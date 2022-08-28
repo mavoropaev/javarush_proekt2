@@ -132,12 +132,6 @@ public abstract class Animal {
     public void setLifeSpan(int lifeSpan) {
         this.lifeSpan = lifeSpan;
     }
-    public void increaseLifespan() {
-        this.lifeSpan += 1;
-    }
-    public int getLifeSpan() {
-        return lifeSpan;
-    }
 
     public void setPeriodReproductions(int periodReproductions) {
         this.periodReproductions = periodReproductions;
