@@ -17,6 +17,8 @@ public class Buffalo extends Herbivore {
         setWeight(WEIGHT);
         setMaxWeightEat(MAX_EAT);
         setCurrentWeightEat(MAX_EAT);
+        setMaxPopulation(MAX_COUNT_CELL);
+        setMaxStep(MAX_SPEED);
         setStatusAnimals(statusAnimals);
         setLifeSpan(0);
         setPeriodReproductions(PERIOD_REPRODUCTIONS);
@@ -34,7 +36,7 @@ public class Buffalo extends Herbivore {
     }
 
     @Override
-    public int getSpeed() {
+    public int getMaxStep() {
         return MAX_SPEED;
     }
 

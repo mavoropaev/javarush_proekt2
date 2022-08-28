@@ -1,6 +1,5 @@
 package ua.com.javarush.mavoropaev.javarush_proekt2.animals;
 
-import ua.com.javarush.mavoropaev.javarush_proekt2.map.GeneralMap;
 import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 
 public class Predator extends Animal {
@@ -20,8 +19,8 @@ public class Predator extends Animal {
     }
 
     @Override
-    public boolean move(int countStep, int maxPopulation) {
-        return super.move(countStep, maxPopulation);
+    public boolean move() {
+        return super.move();
     }
 
     @Override

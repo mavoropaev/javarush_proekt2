@@ -5,8 +5,6 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.map.GeneralMap;
 import ua.com.javarush.mavoropaev.javarush_proekt2.statistics.GlobalStatistics;
 import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -14,7 +12,7 @@ public abstract class Animal {
     private NameItem name;
     private double weight;
     private int maxPopulation;
-    private int speed;
+    private int maxStep;
     private double maxWeightEat;
     private double currentWeightEat;
     private StatusAnimals statusAnimals;
@@ -34,27 +32,6 @@ public abstract class Animal {
     public final int LEFT_DIR = 4;
     private int xMap;
     private int yMap;
-
-    public void setxMap(int xMap) {
-        this.xMap = xMap;
-    }
-
-    public void setyMap(int yMap) {
-        this.yMap = yMap;
-    }
-
-    public int getxMap() {
-        return xMap;
-    }
-
-    public int getyMap() {
-        return yMap;
-    }
-
-
-
-    //GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
-    //CycleCounter cycleCounter  = CycleCounter.getInstance();
 
     public Animal(NameItem name, StatusAnimals statusAnimals, int xMap, int yMap) {
         this.name = name;
@@ -124,11 +101,11 @@ public abstract class Animal {
         return maxPopulation;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public void setMaxStep(int maxStep) {
+        this.maxStep = maxStep;
     }
-    public int getSpeed() {
-        return speed;
+    public int getMaxStep() {
+        return maxStep;
     }
 
     public void setMaxWeightEat(double maxWeightEat) {
@@ -179,21 +156,22 @@ public abstract class Animal {
     }
 
 
-   public boolean move(int maxCountStep, int maxPopulation) {
+   //public boolean move(int maxCountStep, int maxPopulation) {
+   public boolean move() {
         synchronized (this.getClass()) {
             GeneralMap generalMap = GeneralMap.getInstance();
             GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
             CycleCounter cycleCounter = CycleCounter.getInstance();
-            //step - 1 : move - animal.move()
+
             if (getCountCycleMove() < cycleCounter.getCycleCounter()) {
                 Random random = new Random();
                 int newXMap = 0;
                 int newYMap = 0;
 
-                if (maxCountStep > 0) {
+                if (maxStep > 0) {
                     int countStep = 0;
                     while (countStep == 0) {
-                        countStep = random.nextInt(maxCountStep + 1);
+                        countStep = random.nextInt(maxStep + 1);
                     }
                     int direction = 0;
                     while (direction == 0) {

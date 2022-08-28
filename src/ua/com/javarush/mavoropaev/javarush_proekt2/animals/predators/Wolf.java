@@ -18,6 +18,8 @@ public class Wolf extends Predator {
         setMaxWeightEat(MAX_EAT);
         setWeight(WEIGHT);
         setCurrentWeightEat(MAX_EAT);
+        setMaxPopulation(MAX_COUNT_CELL);
+        setMaxStep(MAX_SPEED);
         setStatusAnimals(statusAnimals);
         setLifeSpan(0);
         setPeriodReproductions(PERIOD_REPRODUCTIONS);
@@ -35,7 +37,7 @@ public class Wolf extends Predator {
     }
 
     @Override
-    public int getSpeed() {
+    public int getMaxStep() {
         return MAX_SPEED;
     }
 

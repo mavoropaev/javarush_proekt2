@@ -62,11 +62,7 @@ public class Parameters {
     }
 
     public TreeSet<Integer> getKeySet(){
-        TreeSet<Integer> treeSet = new TreeSet<>();
-        for (Integer key : cellXY.keySet()){
-            treeSet.add(key);
-        }
-        return treeSet;
+        return new TreeSet<>(cellXY.keySet());
     }
 
     public TreeSet<Integer> getKeyValue(int key){

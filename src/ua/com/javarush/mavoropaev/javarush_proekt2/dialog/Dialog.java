@@ -85,9 +85,6 @@ public class Dialog {
     }
 
     public boolean checkCellXY(int x, int y){
-        if (x < 0 || x >= parameters.getMapSizeX() || y < 0 || y > parameters.getMapSizeY()){
-            return false;
-        }
-        return true;
+        return x >= 0 && x < parameters.getMapSizeX() && y >= 0 && y <= parameters.getMapSizeY();
     }
 }

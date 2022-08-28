@@ -75,12 +75,7 @@ public class GlobalStatistics {
                     int countAnimalsOnType = generalMap.cellMap[x][y].countAnimalsOnType.get(name);
                     cellStatistics[x][y].setStatisticsEndCycle(name, countAnimalsOnType);
 
-                    if (countAnimalsAllMap.containsKey(name)){
-                        count = countAnimalsAllMap.get(name);
-                    }
-                    else{
-                        count = 0;
-                    }
+                    count = countAnimalsAllMap.getOrDefault(name, 0);
                     count += countAnimalsOnType;
                     countAnimalsAllMap.put(name, count);
                 }
@@ -99,49 +94,49 @@ public class GlobalStatistics {
         cellStatistics[x][y].addStatisticsDeath(name);
     }
 
-    public int getStatisticsDeath(int x, int y, NameItem name){
-        return cellStatistics[x][y].getStatisticsDeath(name);
-    }
+   // public int getStatisticsDeath(int x, int y, NameItem name){
+   //     return cellStatistics[x][y].getStatisticsDeath(name);
+   // }
 
     public void addStatisticsReproductions(int x, int y, NameItem name){
         cellStatistics[x][y].addStatisticsReproductions(name);
     }
 
-    public int getStatisticsReproductions(int x, int y, NameItem name){
-        return cellStatistics[x][y].getStatisticsReproductions(name);
-    }
+    //public int getStatisticsReproductions(int x, int y, NameItem name){
+    //    return cellStatistics[x][y].getStatisticsReproductions(name);
+   // }
 
     public void addStatisticsCome(int x, int y, NameItem name){
         cellStatistics[x][y].addStatisticsCome(name);
     }
 
-    public int getStatisticsCome(int x, int y, NameItem name){
-        return cellStatistics[x][y].getStatisticsCome(name);
-    }
+    //public int getStatisticsCome(int x, int y, NameItem name){
+    //    return cellStatistics[x][y].getStatisticsCome(name);
+   // }
 
     public void addStatisticsLeave(int x, int y, NameItem name){
         cellStatistics[x][y].addStatisticsLeave(name);
     }
 
-    public int getStatisticsLeave(int x, int y, NameItem name){
-        return cellStatistics[x][y].getStatisticsLeave(name);
-    }
+   // public int getStatisticsLeave(int x, int y, NameItem name){
+    //    return cellStatistics[x][y].getStatisticsLeave(name);
+    //}
 
     public void addStatisticsHaveBeenEaten(int x, int y, NameItem name){
         cellStatistics[x][y].addStatisticsHaveBeenEaten(name);
     }
 
-    public int getStatisticsHaveBeenEaten(int x, int y, NameItem name){
-        return cellStatistics[x][y].getStatisticsHaveBeenEaten(name);
-    }
+   // public int getStatisticsHaveBeenEaten(int x, int y, NameItem name){
+   //     return cellStatistics[x][y].getStatisticsHaveBeenEaten(name);
+   // }
 
     public void addStatisticsWhoAteWho(int x, int y, NameItem name, NameItem nameFood){
         cellStatistics[x][y].addStatisticsWhoAteWho(name, nameFood);
     }
 
-    public ArrayList<NameItem> getStatisticsWhoAteWho(int x, int y, NameItem name){
-        return cellStatistics[x][y].getStatisticsWhoAteWho(name);
-    }
+   // public ArrayList<NameItem> getStatisticsWhoAteWho(int x, int y, NameItem name){
+    //    return cellStatistics[x][y].getStatisticsWhoAteWho(name);
+   // }
 
     public void printStatistics(int x, int y){
         String separator = "-------------------------------------------------------------------------------------------------------------------";
@@ -172,7 +167,7 @@ public class GlobalStatistics {
             int endCycleAllMap = countAnimalsAllMap.get(name);
             String strEndCycleAllMap = String.format("%9d", endCycleAllMap);
 
-            String strWhoAteWho = new String();
+            StringBuilder strWhoAteWho = new StringBuilder();
             if (cellStatistics[x][y].getStatisticsWhoAteWho(name) != null) {
                 ArrayList<NameItem> listNameItem = cellStatistics[x][y].getStatisticsWhoAteWho(name);
                 HashMap<NameItem, Integer> listAteCount = new HashMap<>();
@@ -185,9 +180,13 @@ public class GlobalStatistics {
                     count++;
                     listAteCount.put(nameItem, count);
                 }
-                strWhoAteWho = "|";
+                strWhoAteWho = new StringBuilder("|");
                 for (NameItem nameItem : listAteCount.keySet()) {
-                    strWhoAteWho += " | " + nameItem + " : " + listAteCount.get(nameItem) + " | ";
+                    strWhoAteWho.append(" | ")
+                            .append(nameItem)
+                            .append(" : ")
+                            .append(listAteCount.get(nameItem))
+                            .append(" | ");
                 }
             }
 
