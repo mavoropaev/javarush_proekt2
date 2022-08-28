@@ -1,4 +1,6 @@
-package ua.com.javarush.mavoropaev.javarush_proekt2.service;
+package ua.com.javarush.mavoropaev.javarush_proekt2.dialog;
+
+import ua.com.javarush.mavoropaev.javarush_proekt2.service.Parameters;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

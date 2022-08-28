@@ -9,8 +9,8 @@ public class BoaConstrictor extends Predator {
     public static final int MAX_COUNT_CELL = 30;//30;
     public static final int MAX_SPEED = 1;
     public static final double MAX_EAT = 3;
-    public static final int PERIOD_REPRODUCTIONS = 1;
-    public static final int AMOUNT_OF_CHILDREN = 1;
+    public static final int PERIOD_REPRODUCTIONS = 2;
+    public static final int AMOUNT_OF_CHILDREN = 2;
 
     public BoaConstrictor(NameItem boaConstrictor, StatusAnimals statusAnimals, int x, int y) {
         super(boaConstrictor, statusAnimals, x, y);

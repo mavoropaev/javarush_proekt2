@@ -13,7 +13,6 @@ public class Cell {
     private int y;
 
     public HashMap<NameItem, CopyOnWriteArrayList<Animal>> listAnimals = new HashMap<>();
-   // public static final List<Integer> LIST = new CopyOnWriteArrayList<>()
     public HashMap<NameItem, Integer> countAnimalsOnType = new HashMap<>();
 
     public Cell() {

@@ -10,10 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GlobalStatistics {
-    private int sizeX;
-    private int sizeY;
     CycleCounter cycleCounter  = CycleCounter.getInstance();
     Parameters parameters = Parameters.getInstance();
+    public HashMap<NameItem, Integer> countAnimalsAllMap = new HashMap<>();
 
     private static volatile GlobalStatistics instance;
     public static GlobalStatistics getInstance() {
@@ -68,23 +67,32 @@ public class GlobalStatistics {
 
     public void setCellStatisticsEndCycle(){
         GeneralMap generalMap = GeneralMap.getInstance();
+        int count = 0;
+        countAnimalsAllMap.clear();
         for (int x = 0; x < cellStatistics.length; x++){
             for (int y = 0; y < cellStatistics[0].length; y++){
                 for (NameItem name : generalMap.cellMap[x][y].listAnimals.keySet()) {
                     int countAnimalsOnType = generalMap.cellMap[x][y].countAnimalsOnType.get(name);
                     cellStatistics[x][y].setStatisticsEndCycle(name, countAnimalsOnType);
+
+                    if (countAnimalsAllMap.containsKey(name)){
+                        count = countAnimalsAllMap.get(name);
+                    }
+                    else{
+                        count = 0;
+                    }
+                    count += countAnimalsOnType;
+                    countAnimalsAllMap.put(name, count);
                 }
                 cellStatistics[x][y].setStatisticsEndCycle(NameItem.PLANTS, generalMap.plantsMap[x][y].getCurrentBiomassWeight());
+
+                if (countAnimalsAllMap.containsKey(NameItem.PLANTS)){
+                    count = countAnimalsAllMap.get(NameItem.PLANTS);
+                }
+                count += generalMap.plantsMap[x][y].getCurrentBiomassWeight();
+                countAnimalsAllMap.put(NameItem.PLANTS, count);
             }
         }
-    }
-
-    public void addStatisticsCell(int x, int y, NameItem name, String string){
-        cellStatistics[x][y].addStatisticsCell(name, string);
-    }
-
-    public ArrayList<String> getStatisticsCell(int x, int y, NameItem name){
-        return cellStatistics[x][y].getStatisticsCell(name);
     }
 
     public void addStatisticsDeath(int x, int y, NameItem name){
@@ -135,18 +143,12 @@ public class GlobalStatistics {
         return cellStatistics[x][y].getStatisticsWhoAteWho(name);
     }
 
-    public void getStatisticsAnimals(){
-    }
-
-    public void getStatisticsStep(){
-    }
-
     public void printStatistics(int x, int y){
-        String separator = "----------------------------------------------------------------------------------------------";
+        String separator = "-------------------------------------------------------------------------------------------------------------------";
         System.out.println(separator);
         System.out.println("Cycle number : " + cycleCounter.getCycleCounter() + " : Positions : (" + x + ", " + y + ")");
         System.out.println(separator);
-        String str       = "|       Name      | Start cycle | Death | Reproductions |  Come  | Leave | Eaten | End cycle |" +
+        String str       = "|       Name      | Start cycle | Death | Reproductions |  Come  | Leave | Eaten | End cycle |  All map  |" +
                 "  List of animals eaten |";
         System.out.println(str);
         System.out.println(separator);
@@ -167,6 +169,8 @@ public class GlobalStatistics {
             String strEaten = String.format("%5d", eaten);
             int endCycle = cellStatistics[x][y].getStatisticsEndCycle(name);
             String strEndCycle = String.format("%9d", endCycle);
+            int endCycleAllMap = countAnimalsAllMap.get(name);
+            String strEndCycleAllMap = String.format("%9d", endCycleAllMap);
 
             String strWhoAteWho = new String();
             if (cellStatistics[x][y].getStatisticsWhoAteWho(name) != null) {
@@ -188,7 +192,7 @@ public class GlobalStatistics {
             }
 
             String strCycle = "| " + strName + " | " + strStartCycle + " | " + strDeath + " | " + strReproductions +
-                             " | " + strCome + " | " + strLeave + " | " + strEaten + " | " + strEndCycle + " | ";
+                             " | " + strCome + " | " + strLeave + " | " + strEaten + " | " + strEndCycle + " | " + strEndCycleAllMap + " | ";
             strCycle = strCycle + strWhoAteWho;
             System.out.println(strCycle);
 

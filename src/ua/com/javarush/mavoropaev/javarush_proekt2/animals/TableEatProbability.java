@@ -10,7 +10,6 @@ public class TableEatProbability {
     private static final HashMap<Integer, NameItem> NUMBER_TO_ANIMAL = new HashMap<>();
     private static final HashMap<NameFoods, Integer> FOOD_TO_NUMBER = new HashMap<>();
     private static final HashMap<Integer, NameFoods> NUMBER_TO_FOOD = new HashMap<>();
-    private final int COUNT_TYPE_EAT = 16;
     public int[][] tableEatProbability = new int[16][16];
 
     public TableEatProbability() {
