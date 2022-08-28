@@ -219,13 +219,10 @@ public class GeneralMap {
                     animalsList = cellMap[xFinal][yFinal].listAnimals.get(name);
 
                     animalsList.forEach(animal -> {
-                        if (animal.getCountCycleCheckDeath() < cycleCounter.getCycleCounter()) {
-                            animal.setCurrentWeightEat(animal.getCurrentWeightEat() - animal.getMaxWeightEat() * 0.25);
-                            if (animal.getCurrentWeightEat() <= 0 && animal.getMaxWeightEat() > 0) {
-                                animalsList.remove(animal);
-                                cellMap[xFinal][yFinal].decrementCounterAnimalsOnType(name);
-                                globalStatistics.addStatisticsDeath(xFinal, yFinal, name);
-                            }
+                        if (animal.die()){
+                            animalsList.remove(animal);
+                            cellMap[xFinal][yFinal].decrementCounterAnimalsOnType(name);
+                            globalStatistics.addStatisticsDeath(xFinal, yFinal, name);
                         }
                     });
                 }
@@ -307,7 +304,6 @@ public class GeneralMap {
         }
     }
 
-    //вариант случайного выбора еды
     private NameItem getFoodsRandom(NameItem nameAnimal, int x, int y) {
         ArrayList<NameItem> listFood = new ArrayList<>();
         Random random = new Random();
@@ -392,7 +388,6 @@ public class GeneralMap {
                 animalsList = cellMap[x][y].listAnimals.get(name);
 
                 animalsList.forEach(animal -> {
-                    //if (animal.move(animal.getSpeed(), animal.getMaxPopulation())) {
                     if (animal.move()) {
                         animalsList.remove(animal);
                         globalStatistics.addStatisticsLeave(xFinal, yFinal, name);

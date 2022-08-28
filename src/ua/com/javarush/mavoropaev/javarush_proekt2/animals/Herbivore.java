@@ -29,7 +29,7 @@ public class Herbivore extends Animal {
     }
 
     @Override
-    public void dead() {
-
+    public boolean die() {
+        return super.die();
     }
 }

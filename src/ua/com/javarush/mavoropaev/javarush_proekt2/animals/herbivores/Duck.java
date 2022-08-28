@@ -20,7 +20,6 @@ public class Duck extends Herbivore {
         setMaxPopulation(MAX_COUNT_CELL);
         setMaxStep(MAX_SPEED);
         setStatusAnimals(statusAnimals);
-        setLifeSpan(0);
         setPeriodReproductions(PERIOD_REPRODUCTIONS);
         setAmountOfChildren(AMOUNT_OF_CHILDREN);
     }

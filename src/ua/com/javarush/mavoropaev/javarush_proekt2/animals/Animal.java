@@ -16,7 +16,6 @@ public abstract class Animal {
     private double maxWeightEat;
     private double currentWeightEat;
     private StatusAnimals statusAnimals;
-    private int lifeSpan;
     private int periodReproductions;
     private int amountOfChildren;
 
@@ -42,7 +41,8 @@ public abstract class Animal {
 
     public abstract void eat();
     public abstract void reproduction();
-    public abstract void dead();
+
+
 
     public void setCountCycleReproduction(int countCycleReproduction) {
         this.countCycleReproduction = countCycleReproduction;
@@ -129,10 +129,6 @@ public abstract class Animal {
         this.statusAnimals = statusAnimals;
     }
 
-    public void setLifeSpan(int lifeSpan) {
-        this.lifeSpan = lifeSpan;
-    }
-
     public void setPeriodReproductions(int periodReproductions) {
         this.periodReproductions = periodReproductions;
     }
@@ -149,9 +145,18 @@ public abstract class Animal {
         return amountOfChildren;
     }
 
+    public boolean die(){
+        CycleCounter cycleCounter = CycleCounter.getInstance();
+        if (countCycleCheckDeath < cycleCounter.getCycleCounter()) {
+            setCurrentWeightEat(getCurrentWeightEat() - getMaxWeightEat() * 0.25);
+            if (getCurrentWeightEat() <= 0 && getMaxWeightEat() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-   //public boolean move(int maxCountStep, int maxPopulation) {
-   public boolean move() {
+    public boolean move() {
         synchronized (this.getClass()) {
             GeneralMap generalMap = GeneralMap.getInstance();
             GlobalStatistics globalStatistics = GlobalStatistics.getInstance();

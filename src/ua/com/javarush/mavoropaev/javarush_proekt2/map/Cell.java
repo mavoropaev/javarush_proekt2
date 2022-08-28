@@ -3,9 +3,7 @@ package ua.com.javarush.mavoropaev.javarush_proekt2.map;
 import ua.com.javarush.mavoropaev.javarush_proekt2.service.NameItem;
 import ua.com.javarush.mavoropaev.javarush_proekt2.animals.Animal;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Cell {
