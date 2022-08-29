@@ -49,9 +49,9 @@ public class GeneralMap {
         plantsMap = new Plants[sizeX][sizeY];
     }
 
-    public volatile List<Thread> threadList = new ArrayList<>(parameters.ITEM_COUNT);
+    public volatile List<Thread> threadList = new ArrayList<>(Parameters.ITEM_COUNT);
 
-    public void start() {
+    public void startMap() {
         tableEatProbability = new TableEatProbability();
         initCellMap();
         initPlantsMap();
@@ -352,7 +352,7 @@ public class GeneralMap {
             //едим!!!!
             if (nameFood != NameItem.PLANTS) {
                 if (cellMap[x][y].listAnimals.get(nameFood).size() > 0) {
-                    synchronized (cellMap[x][y].listAnimals.get(nameFood).getClass()) {
+                    synchronized (cellMap[x][y].listAnimals.get(nameFood).get(0).getClass()) {
                         if (cellMap[x][y].listAnimals.get(nameFood).size() > 0) {
                             double weightEat = cellMap[x][y].listAnimals.get(nameFood).get(0).getWeight();
 
@@ -485,8 +485,8 @@ public class GeneralMap {
         NameItem nameItemFood;
 
         int numberAnimal = tableEatProbability.getNumberToAnimal(nameAnimal);
-        int probabilityEat = 0;
-        int countAnimalsOnTypeCell = 0;
+        int probabilityEat;
+        int countAnimalsOnTypeCell;
         double massFactor;
         double weightAnimal;
 

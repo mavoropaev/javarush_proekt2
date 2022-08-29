@@ -67,7 +67,7 @@ public abstract class Animal {
 
 
 
-    public abstract Animal newObject(NameItem wolf, StatusAnimals statusAnimals, int x, int y);
+    public abstract Animal newObject(NameItem name, StatusAnimals statusAnimals, int x, int y);
 
     public void setCurrentWeightEat(double currentWeightEat) {
         this.currentWeightEat = (double) Math.round(currentWeightEat * 10000) / 10000;

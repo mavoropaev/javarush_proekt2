@@ -11,6 +11,6 @@ public class Main {
         dialog.startDialog();
 
         GeneralMap generalMap = GeneralMap.getInstance();
-        generalMap.start();
+        generalMap.startMap();
     }
 }
