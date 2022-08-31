@@ -14,18 +14,8 @@ public class Predator extends Animal {
     }
 
     @Override
-    public void eat() {
-
-    }
-
-    @Override
     public boolean move() {
         return super.move();
-    }
-
-    @Override
-    public void reproduction() {
-
     }
 
     @Override

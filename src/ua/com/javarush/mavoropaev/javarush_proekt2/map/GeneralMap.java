@@ -17,16 +17,12 @@ public class GeneralMap {
     private int sizeX;
     private int sizeY;
 
-    public final int COUNT_TYPE_FOODS = 16;
-
     public Cell[][] cellMap;
     public Plants[][] plantsMap;
     TableEatProbability tableEatProbability;
     GlobalStatistics globalStatistics = GlobalStatistics.getInstance();
     CycleCounter cycleCounter = CycleCounter.getInstance();
     Parameters parameters = Parameters.getInstance();
-
-    Semaphore2 semaphore = new Semaphore2();
 
     private static volatile GeneralMap instance;
 

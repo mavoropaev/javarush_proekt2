@@ -12,20 +12,9 @@ public class Herbivore extends Animal {
         return new Herbivore(herbivore, statusAnimals, x, y);
     }
 
-
-    @Override
-    public void eat() {
-
-    }
-
     @Override
     public boolean move() {
         return super.move();
-    }
-
-    @Override
-    public void reproduction() {
-
     }
 
     @Override

@@ -39,11 +39,6 @@ public abstract class Animal {
         this.statusAnimals = statusAnimals;
     }
 
-    public abstract void eat();
-    public abstract void reproduction();
-
-
-
     public void setCountCycleReproduction(int countCycleReproduction) {
         this.countCycleReproduction = countCycleReproduction;
     }
@@ -149,9 +144,7 @@ public abstract class Animal {
         CycleCounter cycleCounter = CycleCounter.getInstance();
         if (countCycleCheckDeath < cycleCounter.getCycleCounter()) {
             setCurrentWeightEat(getCurrentWeightEat() - getMaxWeightEat() * 0.25);
-            if (getCurrentWeightEat() <= 0 && getMaxWeightEat() > 0) {
-                return true;
-            }
+            return getCurrentWeightEat() <= 0 && getMaxWeightEat() > 0;
         }
         return false;
     }
