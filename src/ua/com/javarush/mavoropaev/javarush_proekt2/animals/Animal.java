@@ -25,10 +25,10 @@ public abstract class Animal {
     private int countCycleCheckDeath;
 
     public final int COUNT_DIRECTION = 4;
-    public final int UP_DIR = 1;
-    public final int RIGHT_DIR = 2;
-    public final int DOWN_DIR = 3;
-    public final int LEFT_DIR = 4;
+    public final int UP_DIRECTION = 1;
+    public final int RIGHT_DIRECTION = 2;
+    public final int DOWN_DIRECTION = 3;
+    public final int LEFT_DIRECTION = 4;
     private int xMap;
     private int yMap;
 
@@ -59,8 +59,6 @@ public abstract class Animal {
     public int getCountCycleMove() {
         return countCycleMove;
     }
-
-
 
     public abstract Animal newObject(NameItem name, StatusAnimals statusAnimals, int x, int y);
 
@@ -170,52 +168,29 @@ public abstract class Animal {
                         direction = random.nextInt(COUNT_DIRECTION + 1);
                     }
 
-                    if (direction == UP_DIR) {
-                        newYMap = yMap + countStep;
-                        if (newYMap >= generalMap.getSizeY()) {
-                            newYMap = generalMap.getSizeY() - 1;
-                        }
-                        if (newYMap == yMap) {
-                            setCountCycleMove(cycleCounter.getCycleCounter());
-                            return false;
-                        }
+                    if (direction == UP_DIRECTION) {
+                        newYMap = Math.min(yMap + countStep, generalMap.getSizeY() - 1);
                         newXMap = xMap;
                     }
 
-                    if (direction == RIGHT_DIR) {
-                        newXMap = xMap + countStep;
-                        if (newXMap >= generalMap.getSizeX()) {
-                            newXMap = generalMap.getSizeX() - 1;
-                        }
-                        if (newXMap == xMap) {
-                            setCountCycleMove(cycleCounter.getCycleCounter());
-                            return false;
-                        }
+                    if (direction == RIGHT_DIRECTION) {
+                        newXMap = Math.min(xMap + countStep, generalMap.getSizeX() - 1);
                         newYMap = yMap;
                     }
 
-                    if (direction == DOWN_DIR) {
-                        newYMap = yMap - countStep;
-                        if (newYMap < 0) {
-                            newYMap = 0;
-                        }
-                        if (newYMap == yMap) {
-                            setCountCycleMove(cycleCounter.getCycleCounter());
-                            return false;
-                        }
+                    if (direction == DOWN_DIRECTION) {
+                        newYMap = Math.max(yMap - countStep, 0);
                         newXMap = xMap;
                     }
 
-                    if (direction == LEFT_DIR) {
-                        newXMap = xMap - countStep;
-                        if (newXMap < 0) {
-                            newXMap = 0;
-                        }
-                        if (newXMap == xMap) {
-                            setCountCycleMove(cycleCounter.getCycleCounter());
-                            return false;
-                        }
+                    if (direction == LEFT_DIRECTION) {
+                        newXMap = Math.max(xMap - countStep, 0);
                         newYMap = yMap;
+                    }
+
+                    if (newXMap == xMap && newYMap == yMap) {
+                        setCountCycleMove(cycleCounter.getCycleCounter());
+                        return false;
                     }
 
                     int countAnimalsOnTypeNewCell = generalMap.cellMap[newXMap][newYMap].getCounterAnimalsOnType(name);
