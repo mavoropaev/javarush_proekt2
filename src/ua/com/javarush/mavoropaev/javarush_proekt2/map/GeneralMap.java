@@ -11,6 +11,7 @@ import ua.com.javarush.mavoropaev.javarush_proekt2.statistics.GlobalStatistics;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Phaser;
 
 public class GeneralMap {
     private int sizeX;
@@ -57,139 +58,74 @@ public class GeneralMap {
         initPlantsMap();
         initAnimals();
 
-        Thread statisticsThread = new Thread(new StatisticsThread());
-        statisticsThread.start();
+        Phaser phaser = new Phaser(0);
+        new Thread(new StatisticsThread(phaser, "StatisticsThread")).start();
 
         for (NameItem name : NameItem.values()) {
             if (name.equals(NameItem.PLANTS)) continue;
-            Thread itemThread = new Thread(new animalsThread(name));
+            Thread itemThread = new Thread(new AnimalsThread(name, phaser, "AnimalsThread : " + name ));
             threadList.add(itemThread);
             itemThread.start();
         }
-
     }
 
-    public class animalsThread implements Runnable {
+    public class AnimalsThread implements Runnable {
         private NameItem nameItem;
+        Phaser phaser;
+        String name;
 
-        public animalsThread(NameItem nameItem) {
+        public AnimalsThread(NameItem nameItem, Phaser p, String n) {
             this.nameItem = nameItem;
+            this.phaser = p;
+            this.name = n;
+            phaser.register();
         }
 
         @Override
         public void run() {
             for (int i = 0; i < parameters.getCountCycle(); i++) {
-                while (i >= cycleCounter.getCycleCounter()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                phaser.arriveAndAwaitAdvance(); //restorePlants
 
                 checkDeathAnimals(nameItem);
-                synchronized(semaphore) {
-                    semaphore.reduceSemaphore();
-                }
+                phaser.arriveAndAwaitAdvance(); //checkDeathAnimals
 
-                while (!semaphore.isSemaphoreTwo()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
                 eatAllAnimals(nameItem);
-                synchronized(semaphore) {
-                    semaphore.reduceSemaphore();
-                }
-
-                while (!semaphore.isSemaphoreOne()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                phaser.arriveAndAwaitAdvance(); //eatAllAnimals
 
                 reproductionAllAnimals(nameItem);
-                synchronized(semaphore) {
-                    semaphore.reduceSemaphore();
-                }
-                while (!semaphore.isSemaphoreTwo()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                phaser.arriveAndAwaitAdvance(); //reproductionAllAnimals
 
                 moveAllAnimals(nameItem);
-                synchronized(semaphore) {
-                    semaphore.reduceSemaphore();
-                }
+                phaser.arriveAndAwaitAdvance(); //moveAllAnimals
+
+                phaser.arriveAndAwaitAdvance(); //globalStatistics.setCellStatisticsEndCycle
             }
+            phaser.arriveAndDeregister();
         }
     }
 
     public class StatisticsThread implements Runnable {
-        public StatisticsThread() {
+        Phaser phaser;
+        String name;
+
+        public StatisticsThread(Phaser p, String n) {
+            this.phaser = p;
+            this.name = n;
+            phaser.register();
         }
 
         @Override
         public void run() {
             for (int i = 0; i < parameters.getCountCycle(); i++) {
+                restorePlants();
+                globalStatistics.setCellStatisticsBeginCycle();
+                cycleCounter.increaseCycleCounter();
+                phaser.arriveAndAwaitAdvance(); //restorePlants
 
-                synchronized (semaphore) {
-                    semaphore.semaphoreOn(Parameters.ITEM_COUNT);
-                    restorePlants();
-                    globalStatistics.setCellStatisticsBeginCycle();
-                    semaphore.reduceSemaphore();
-                    cycleCounter.increaseCycleCounter();
-                    semaphore.setSemaphoreOne(true);
-                    semaphore.setSemaphoreTwo(false);
-                }
-
-                while (!semaphore.switchSemaphoreTwo()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                synchronized(semaphore) {
-                    semaphore.reduceSemaphore();
-                }
-
-                while (!semaphore.switchSemaphoreOne()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                synchronized(semaphore) {
-                    semaphore.reduceSemaphore();
-                }
-
-                while (!semaphore.switchSemaphoreTwo()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                synchronized(semaphore) {
-                    semaphore.reduceSemaphore();
-                }
-                while (!semaphore.switchSemaphoreOne()) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                phaser.arriveAndAwaitAdvance(); //checkDeathAnimals
+                phaser.arriveAndAwaitAdvance(); //eatAllAnimals
+                phaser.arriveAndAwaitAdvance(); //reproductionAllAnimals
+                phaser.arriveAndAwaitAdvance(); //moveAllAnimals
 
                 synchronized (GlobalStatistics.class) {
                     globalStatistics.setCellStatisticsEndCycle();
@@ -199,7 +135,9 @@ public class GeneralMap {
                         }
                     }
                 }
+                phaser.arriveAndAwaitAdvance(); //globalStatistics.setCellStatisticsEndCycle
             }
+            phaser.arriveAndDeregister();
         }
     }
 
@@ -477,56 +415,6 @@ public class GeneralMap {
             }
         }
     }
-
-    private NameItem getFoods(Animal animal, int x, int y) {
-        HashMap<NameItem, ArrayList<Animal>> listAllFoods = new HashMap<>();
-        HashMap<NameItem, Double> listMassFactor = new HashMap<>();
-        NameItem nameAnimal = animal.getName();
-        NameItem nameItemFood;
-
-        int numberAnimal = tableEatProbability.getNumberToAnimal(nameAnimal);
-        int probabilityEat;
-        int countAnimalsOnTypeCell;
-        double massFactor;
-        double weightAnimal;
-
-        for (int numFood = 0; numFood < COUNT_TYPE_FOODS; numFood++) {
-            probabilityEat = tableEatProbability.getProbability(numberAnimal, numFood);
-            nameItemFood = tableEatProbability.getAnimalToNumber(numFood);
-            if (probabilityEat > 0) {
-                if (nameItemFood != NameItem.PLANTS) {
-                    countAnimalsOnTypeCell = cellMap[x][y].getCounterAnimalsOnType(nameItemFood);
-
-                    if (countAnimalsOnTypeCell > 0) {
-                        weightAnimal = cellMap[x][y].listAnimals.get(nameItemFood).get(0).getWeight();
-                        massFactor = countAnimalsOnTypeCell * probabilityEat * weightAnimal;
-                        listMassFactor.put(nameItemFood, massFactor);
-                    }
-                } else {
-                    double countPlantsCell = plantsMap[x][y].getCurrentBiomassWeight();
-                    if (countPlantsCell > 0) {
-                        double weightPlants = Plants.WEIGHT;
-                        massFactor = countPlantsCell * probabilityEat * weightPlants;
-                        listMassFactor.put(nameItemFood, massFactor);
-                    }
-                }
-            }
-        }
-
-        double maxMassFactor = 0;
-        NameItem nameItemMaxMassFactor = null;
-        for (Map.Entry<NameItem, Double> pair : listMassFactor.entrySet()) {
-            NameItem key = pair.getKey();
-            Double value = pair.getValue();
-            if (value > maxMassFactor) {
-                maxMassFactor = value;
-                nameItemMaxMassFactor = key;
-            }
-        }
-        return nameItemMaxMassFactor;
-    }
-
-
 }
 
 
